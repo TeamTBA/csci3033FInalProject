@@ -20,7 +20,11 @@
             </intent-filter>
         </activity>
         <activity android:name=".quiz_results" />
-        <activity android:name=".QuizResults"></activity>
+        <activity android:name=".QuizResults" />
+        <activity
+            android:name=".QuestionEditorActivity"
+            android:label="@string/title_activity_question_editor"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
