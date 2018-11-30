@@ -17,7 +17,8 @@ import java.util.ArrayList;
 // this static class holds all the methods for accessing the quiz database.
 // this is stored in a binary file, the format of which is implementation-defined and potentially device-specific.
 // functions in this class wrap java-friendly containers defined internally.
-public class QuizDatabase {
+public class QuizDatabase
+{
 
     // ------------------ //
 
@@ -62,11 +63,39 @@ public class QuizDatabase {
         public List<Subject> subjects = new ArrayList<Subject>();
     }
 
+    private static final String dbfilename = "QuestionDatabase.dat";
+
     // ----------------------- //
 
     // -- control functions -- //
 
     // ----------------------- //
 
+    // gets the current database instance
     public static Instance getInstance() { return Instance.instance; }
+
+    // loads the question database from the question file.
+    // returns true iff the file was successfully loaded.
+    // on failure, the instance is not modified.
+    public static boolean load(Context context) throws IOError, IOException, ClassNotFoundException
+    {
+        try (ObjectInputStream f = new ObjectInputStream(context.openFileInput(dbfilename)))
+        {
+            Instance obj = (Instance)f.readObject();
+            Instance.instance.subjects = obj.subjects;
+            return true;
+        }
+        // if the file doesn't exist, that's ok
+        catch (FileNotFoundException ex) { return false; }
+    }
+    // stores the question database to the question file.
+    // returns true iff the file was saved successfully.
+    public static boolean store(Context context) throws IOError, IOException, ClassNotFoundException
+    {
+        try (ObjectOutputStream f = new ObjectOutputStream(context.openFileOutput(dbfilename, 0)))
+        {
+            f.writeObject(Instance.instance);
+            return true;
+        }
+    }
 }
