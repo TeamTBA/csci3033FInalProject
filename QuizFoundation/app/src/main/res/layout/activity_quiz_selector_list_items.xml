@@ -4,10 +4,9 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/listItem1"
+        android:id="@+id/categorySelection"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="54sp"
-        android:textStyle="bold"/>
+        android:layout_height="match_parent"
+        android:textSize="36sp"/>
 
 </LinearLayout>

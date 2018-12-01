@@ -7,5 +7,11 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_question_editor">QuestionEditorActivity</string>
+    <string-array name="subjectArray">
+        <item>Math</item>
+        <item>Science</item>
+        <item>History</item>
+        <item>Other</item>
+    </string-array>
 
 </resources>
