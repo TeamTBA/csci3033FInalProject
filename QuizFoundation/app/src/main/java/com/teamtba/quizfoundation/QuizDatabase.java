@@ -26,7 +26,7 @@ public class QuizDatabase
 
     // ------------------ //
 
-    // represents a question from the databasee
+    // represents a question from the database
     public static class Question
     {
         public String text = "N/A";

@@ -34,7 +34,7 @@
                                           <PersistentState>
                                             <option name="values">
                                               <map>
-                                                <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/navigation/ic_check_black_24dp.xml" />
+                                                <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/action/ic_delete_forever_black_24dp.xml" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -45,12 +45,12 @@
                                   <option name="values">
                                     <map>
                                       <entry key="backgroundAssetType" value="COLOR" />
-                                      <entry key="backgroundColor" value="ffb445" />
-                                      <entry key="backgroundLayerName" value="accept_question_icon_back" />
+                                      <entry key="backgroundColor" value="ed2c1d" />
+                                      <entry key="backgroundLayerName" value="delete_question_icon_back" />
                                       <entry key="foregroundAssetType" value="CLIP_ART" />
                                       <entry key="foregroundImage" value="C:\Users\srhoa\Desktop\history_logo.png" />
-                                      <entry key="foregroundLayerName" value="accept_question_icon_fore" />
-                                      <entry key="outputName" value="accept_question_icon" />
+                                      <entry key="foregroundLayerName" value="delete_question_icon_fore" />
+                                      <entry key="outputName" value="delete_question_icon" />
                                     </map>
                                   </option>
                                 </PersistentState>
