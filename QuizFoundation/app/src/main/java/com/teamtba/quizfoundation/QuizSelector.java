@@ -42,10 +42,10 @@ public class QuizSelector extends AppCompatActivity {
         initListeners();
 
         // initializing the objects
-        initObjects();
+        initializeActivityObjects();
 
         // preparing list data
-        initListData();
+        initializeAdapterData();
     }
 
     private void initListeners() {
@@ -93,7 +93,7 @@ public class QuizSelector extends AppCompatActivity {
 
 
 
-    void initObjects(){
+    void initializeActivityObjects(){
 
         // initializing the list of groups
         subjects = new ArrayList<>();
@@ -112,7 +112,7 @@ public class QuizSelector extends AppCompatActivity {
 
     }
 
-    private void initListData() {
+    private void initializeAdapterData() {
 
 
         // Adding group dummy data
@@ -126,21 +126,21 @@ public class QuizSelector extends AppCompatActivity {
         // Math Children
         List<String> mathList = new ArrayList<>();
         mathList.add("Calculus");
-        mathList.add("Add Category");
+        mathList.add("+ Add Category");
 
         //History Children
         List<String> historyList = new ArrayList<>();
         historyList.add("World Wars");
-        historyList.add("Add Category");
+        historyList.add("+ Add Category");
 
         // list of Science
         List<String> scienceList = new ArrayList<String>();
         scienceList.add("Chemistry");
-        scienceList.add("Add Category");
+        scienceList.add("+ Add Category");
 
         // list of Other categories
         List<String> otherList = new ArrayList<>();
-        otherList.add("Add Category");
+        otherList.add("+ Add Category");
 
         // Adding child data
         subQuiz.put(subjects.get(0), mathList);

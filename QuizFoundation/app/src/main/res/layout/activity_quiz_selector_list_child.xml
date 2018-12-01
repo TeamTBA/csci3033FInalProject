@@ -10,7 +10,9 @@
         android:id="@+id/quizSelectorListChild"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:textColor="@color/colorPrimaryDark"
+        android:text="dummyText"
         android:paddingLeft="?android:attr/expandableListPreferredChildPaddingLeft"
-        android:textSize="17dp"/>
+        android:textSize="24dp"/>
 
 </LinearLayout>

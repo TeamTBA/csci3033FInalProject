@@ -6,7 +6,9 @@
     <TextView
         android:id="@+id/categorySelection"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="72dp"
+        android:background="@color/colorPrimaryDark"
+        android:textColor="@color/answerButtonText"
         android:textSize="36sp"/>
 
 </LinearLayout>
