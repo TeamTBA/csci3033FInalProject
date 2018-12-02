@@ -14,7 +14,7 @@
         android:background="@color/colorPrimaryDark"
         android:gravity="center_vertical"
         android:text="Select Quiz From Subject"
-        android:textAlignment="textStart"
+        android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat"
         android:textColor="@color/answerButtonText"
         android:textSize="24sp"
@@ -25,5 +25,6 @@
         android:id="@+id/quizSelectorList"
         app:layout_constraintTop_toBottomOf="@+id/topText"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></ExpandableListView>
+        android:layout_height="match_parent"
+        android:layout_margin="10dp"></ExpandableListView>
 </LinearLayout>

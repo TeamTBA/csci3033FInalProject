@@ -14,4 +14,11 @@
         <item>Other</item>
     </string-array>
 
+    <string name="new_question_text">Text</string>
+    <string name="new_question_choices">Choices</string>
+    <string name="new_question_add">Add</string>
+    <string name="new_question_subject_and_subcategory">Subject / Subcategory</string>
+    <string name="new_question_subject">Subject</string>
+    <string name="new_question_subcategory">Subcategory</string>
+
 </resources>
