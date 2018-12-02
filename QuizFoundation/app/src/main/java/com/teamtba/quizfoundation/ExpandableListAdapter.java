@@ -21,21 +21,27 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     // List Items
     List<String> subjects;
 
+    //proper List Items
+   // List<QuizDatabase.Subject> subjects;
+
     // Child List Items
     //Map<QuizDatabase.Subject, List<QuizDatabase.Subcategory>> subCategories;
 
     //dummy child list Items to test
-    Map<String, List<String>> subCategories;
+    //Map<String, List<String>> subCategories;
+    //proper storage
+    Map<QuizDatabase.Subject, List<QuizDatabase.Subcategory>> subQuiz;
 
-    public ExpandableListAdapter(Activity context, List<String> subjects, Map<String, List<String>> subCategories) {
+
+    public ExpandableListAdapter(Activity context, List<String> subjects, Map<QuizDatabase.Subject, List<QuizDatabase.Subcategory>> subQuiz) {
         this.context = context;
         this.subjects = subjects;
-        this.subCategories = subCategories;
+        this.subQuiz = subQuiz;
     }
 
     @Override
     public Object getChild(int groupPosition, int childPosititon) {
-        return this.subCategories.get(this.subjects.get(groupPosition))
+        return this.subQuiz.get(this.subjects.get(groupPosition))
                 .get(childPosititon);
     }
 
@@ -65,7 +71,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public int getChildrenCount(int groupPosition) {
-        return this.subCategories.get(this.subjects.get(groupPosition))
+        return this.subQuiz.get(this.subjects.get(groupPosition))
                 .size();
     }
 

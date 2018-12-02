@@ -20,12 +20,13 @@ public class QuizSelector extends AppCompatActivity {
     ExpandableListView listView;
     com.teamtba.quizfoundation.ExpandableListAdapter listViewAdapter;
     //List<QuizContainer>  subCategories;
-    List<String> subCategories; //dummy
-    List<String> subjects;
+    List<QuizDatabase.Subcategory> subCategories; //dummy
+    List<QuizDatabase.Subject> subjects;
     //Map<QuizDatabase.Subject, List<QuizContainer>> subQuiz;
-    Map<String, List<String>> subQuiz;
+    //Map<String, List<String>> subQuiz;
+    Map<QuizDatabase.Subject, List<QuizDatabase.Subcategory>> subQuiz;
 
-    QuizDatabase newDB;
+    QuizDatabase.Instance instance = QuizDatabase.getInstance();
 
     //initialize
 
@@ -34,7 +35,6 @@ public class QuizSelector extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz_selector);
 
-        newDB = new QuizDatabase();
 
         listView =  findViewById(R.id.quizSelectorList);
         //listView = new com.teamtba.quizfoundation.ExpandableListAdapter(this, subjects, subQuiz);
@@ -73,7 +73,7 @@ public class QuizSelector extends AppCompatActivity {
             @Override
             public void onGroupExpand(int groupPosition) {
                 Toast.makeText(getApplicationContext(),
-                        subjects.get(groupPosition),
+                        subjects.get(groupPosition).name,
                         Toast.LENGTH_SHORT).show();
             }
         });
@@ -84,7 +84,7 @@ public class QuizSelector extends AppCompatActivity {
             @Override
             public void onGroupCollapse(int groupPosition) {
                 Toast.makeText(getApplicationContext(),
-                        subjects.get(groupPosition),
+                        subjects.get(groupPosition).name,
                         Toast.LENGTH_SHORT).show();
 
             }
@@ -99,23 +99,48 @@ public class QuizSelector extends AppCompatActivity {
         subjects = new ArrayList<>();
 
         // initializing the list of child
-        subCategories = new ArrayList<String>();
+        subCategories = new ArrayList<>();
 
         //creating map
-        subQuiz = new HashMap<String, List<String>>();
+        subQuiz = new HashMap<QuizDatabase.Subject, List<QuizDatabase.Subcategory>>();
 
         // initializing the adapter object
-        listViewAdapter = new com.teamtba.quizfoundation.ExpandableListAdapter(this, subjects, subQuiz);
+        //listViewAdapter = new com.teamtba.quizfoundation.ExpandableListAdapter(this, subjects, subQuiz);
 
         // setting list adapter
         listView.setAdapter(listViewAdapter);
 
     }
 
+
     private void initializeAdapterData() {
 
 
-        // Adding group dummy data
+        // data properly from quizDB disk, update once full functionality is established
+
+        for (int i = 0; i < instance.subjects.size(); i++)
+        {
+            subjects.add(instance.subjects.get(i));
+            //create a new Subject in our map, list is added as null initially.
+            //subQuiz.put(instance.subjects.get(i), null);
+            //for (int j = 0; j < instance.subjects.get(i).subcategories.size(); i++)
+            /*{
+                subCategories.add(instance.subjects.get(i).subcategories.get(j));
+            }*/
+            subQuiz.put(instance.subjects.get(i), instance.subjects.get(i).subcategories);
+        }
+
+        /*Adding option for a +add Item to each SubQuiz Subject
+        subQuiz.put(subjects.get(0), mathList);
+        subQuiz.put(subjects.get(1), historyList);
+        subQuiz.put(subjects.get(2), scienceList);
+        subQuiz.put(subjects.get(3), otherList);
+
+        //build map using the Subjects and SubCategories from DB
+        //map info is stored into subjects List and subcategories list
+
+
+         Adding group dummy data
         subjects.add("Math");
         subjects.add("History");
         subjects.add("Science");
@@ -147,7 +172,7 @@ public class QuizSelector extends AppCompatActivity {
         subQuiz.put(subjects.get(1), historyList);
         subQuiz.put(subjects.get(2), scienceList);
         subQuiz.put(subjects.get(3), otherList);
-
+        */
         // notify the adapter
         listViewAdapter.notifyDataSetChanged();
     }
