@@ -40,7 +40,7 @@ public class QuizAction extends AppCompatActivity implements View.OnClickListene
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz_action);
 
-        quizCategory = new ArrayList<QuizDatabase.Question>;
+        //quizCategory = new ArrayList<QuizDatabase.Question>();
         selectedQuiz = getIntent().getStringExtra("selectedQuiz");
         quizCategory = QuizDatabase.getSubCategory(selectedQuiz);
         myQuiz = new QuizTaker();

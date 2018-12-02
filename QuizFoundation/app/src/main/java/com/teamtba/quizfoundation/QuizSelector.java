@@ -1,5 +1,8 @@
 package com.teamtba.quizfoundation;
 
+import android.app.Activity;
+import android.app.Application;
+import android.content.Context;
 import android.content.Intent;
 import android.database.DataSetObserver;
 import android.support.v7.app.AppCompatActivity;
@@ -22,12 +25,10 @@ public class QuizSelector extends AppCompatActivity implements View.OnClickListe
     //initialize our expandable List view and it's adapter
     ExpandableListView listView;
     com.teamtba.quizfoundation.ExpandableListAdapter listViewAdapter;
-    //List<QuizContainer>  subCategories;
-    List<QuizDatabase.Subcategory> subCategories; //dummy
+    List<QuizDatabase.Subcategory> subCategories;
     List<QuizDatabase.Subject> subjects;
-    //Map<QuizDatabase.Subject, List<QuizContainer>> subQuiz;
-    //Map<String, List<String>> subQuiz;
     Map<QuizDatabase.Subject, List<QuizDatabase.Subcategory>> subQuiz;
+
 
     QuizDatabase.Instance instance = QuizDatabase.getInstance();
 
@@ -41,10 +42,12 @@ public class QuizSelector extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz_selector);
 
+        QuizDatabase.load(this);
+
         addNewQuiz = findViewById(R.id.addNewQuizButton);
         listView =  findViewById(R.id.quizSelectorList);
-        // initializing the listeners
-        initListeners();
+        // initializing the listeners for the expandable activity
+        startExListeners();
 
         // initializing the objects
         initializeActivityObjects();
@@ -58,7 +61,7 @@ public class QuizSelector extends AppCompatActivity implements View.OnClickListe
 
     }
 
-    private void initListeners() {
+    private void startExListeners() {
 
         // ExpandableListView on child click listener
         listView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
@@ -139,12 +142,6 @@ public class QuizSelector extends AppCompatActivity implements View.OnClickListe
         for (int i = 0; i < instance.subjects.size(); i++)
         {
             subjects.add(instance.subjects.get(i));
-            //create a new Subject in our map, list is added as null initially.
-            //subQuiz.put(instance.subjects.get(i), null);
-            //for (int j = 0; j < instance.subjects.get(i).subcategories.size(); i++)
-            /*{
-                subCategories.add(instance.subjects.get(i).subcategories.get(j));
-            }*/
             subQuiz.put(instance.subjects.get(i), instance.subjects.get(i).subcategories);
         }
 
