@@ -23,8 +23,8 @@ import java.util.Map;
 public class QuizSelector extends AppCompatActivity implements View.OnClickListener {
 
     //initialize our expandable List view and it's adapter
-    ExpandableListView listView;
-    com.teamtba.quizfoundation.ExpandableListAdapter listViewAdapter;
+   // ExpandableListView listView;
+    //com.teamtba.quizfoundation.ExpandableListAdapter listViewAdapter;
     List<QuizDatabase.Subcategory> subCategories;
     List<QuizDatabase.Subject> subjects;
     Map<QuizDatabase.Subject, List<QuizDatabase.Subcategory>> subQuiz;
@@ -42,25 +42,25 @@ public class QuizSelector extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz_selector);
 
-        QuizDatabase.load(this);
+        //QuizDatabase.load(this);
 
         addNewQuiz = findViewById(R.id.addNewQuizButton);
-        listView =  findViewById(R.id.quizSelectorList);
+       // listView =  findViewById(R.id.quizSelectorList);
         // initializing the listeners for the expandable activity
-        startExListeners();
+        //startExListeners();
 
         // initializing the objects
-        initializeActivityObjects();
+        //initializeActivityObjects();
 
         // preparing list data
-        initializeAdapterData();
+        //initializeAdapterData();
 
         //if addNewQuiz button is clicked, move to the QuestionEditorActivity Page
         addNewQuiz.setOnClickListener(this);
 
 
     }
-
+/*
     private void startExListeners() {
 
         // ExpandableListView on child click listener
@@ -187,11 +187,11 @@ public class QuizSelector extends AppCompatActivity implements View.OnClickListe
         subQuiz.put(subjects.get(1), historyList);
         subQuiz.put(subjects.get(2), scienceList);
         subQuiz.put(subjects.get(3), otherList);
-        */
+
         // notify the adapter
         listViewAdapter.notifyDataSetChanged();
     }
-
+*/
     @Override
     public void onClick(View v) {
         Intent intent = new Intent(QuizSelector.this, QuestionEditorActivity.class);
