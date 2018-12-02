@@ -16,7 +16,9 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
+import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class QuestionEditorActivity extends AppCompatActivity {
@@ -135,9 +137,66 @@ public class QuestionEditorActivity extends AppCompatActivity {
         }
 
         findViewById(R.id.accept_button).setOnClickListener(e -> {
-            ACCEPT = true;
-            finish();
+            if (StoreValues()) {
+                ACCEPT = true;
+                finish();
+            }
         });
+    }
+
+    // stores the current values into the static variables
+    private boolean StoreValues()
+    {
+
+        int subject = subjectSelector.spinner.getSelectedItemPosition();
+        SUBJECT = subject < subjectSelector.spinner.getCount() - 1 ? subject : -1;
+
+        int subcategory = subcategorySelector.spinner.getSelectedItemPosition();
+        SUBCATEGORY = subcategory < subcategorySelector.spinner.getCount() - 1 ? subcategory : -1;
+
+        SUBJECT_TEXT = SUBJECT < 0 ? subjectSelector.text.getText().toString() : null;
+        SUBCATEGORY_TEXT = SUBCATEGORY < 0 ? subcategorySelector.text.getText().toString() : null;
+
+        TEXT = textBox.getText().toString();
+
+        List<String> choi = new ArrayList<String>(choices.length);
+        int answer = -1;
+
+        for (int i = 0; i < choices.length; ++i)
+        {
+            if (choices[i].checkbox.isChecked()) {
+                if (answer < 0) answer = i;
+                else {
+                    Toast.makeText(this, "There can only be one answer", Toast.LENGTH_LONG).show();
+                    return false;
+                }
+            }
+
+            String str = choices[i].text.getText().toString().trim();
+
+            if (!str.isEmpty()) choi.add(str);
+            else if (choices[i].checkbox.isChecked()) {
+                Toast.makeText(this, "Answer cannot be blank", Toast.LENGTH_LONG).show();
+                return false;
+            }
+        }
+
+        if (choi.isEmpty()){
+            Toast.makeText(this, "Must have at least one choice", Toast.LENGTH_LONG).show();
+            return false;
+        }
+        if (answer < 0){
+            Toast.makeText(this, "Must have an answer", Toast.LENGTH_LONG).show();
+            return false;
+        }
+
+        String[] _choi = new String[choi.size()];
+        for (int i = 0; i < choi.size(); ++i) _choi[i] = choi.get(i);
+        CHOICES = _choi;
+
+        ANSWER = answer;
+
+        return true;
     }
 
     @Override
