@@ -3,6 +3,8 @@ package com.teamtba.quizfoundation;
 import android.content.Context;
 import android.nfc.FormatException;
 import android.util.Xml;
+import android.view.View;
+import android.widget.Toast;
 
 import java.lang.String;
 import java.io.*;
@@ -97,5 +99,28 @@ public class QuizDatabase
             f.writeObject(Instance.instance);
             return true;
         }
+    }
+
+    public static Subcategory getSubCategory(String string)
+    {
+        QuizDatabase.Subcategory selectedQuiz = null;
+        try
+        {
+            QuizDatabase.Instance instance = QuizDatabase.getInstance();
+            for (int i = 0; i < instance.subjects.size(); i++)
+            {
+                for (int j = 0; j < instance.subjects.get(i).subcategories.size(); j++)
+                {
+                    if (instance.subjects.get(i).subcategories.get(j).name == string)
+                        selectedQuiz = instance.subjects.get(i).subcategories.get(j);
+
+                }
+            }
+        }
+        catch(Exception e)
+        {
+            //
+        }
+        return selectedQuiz;
     }
 }

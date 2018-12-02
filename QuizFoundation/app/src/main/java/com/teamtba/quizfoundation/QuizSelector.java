@@ -1,11 +1,14 @@
 package com.teamtba.quizfoundation;
 
+import android.content.Intent;
 import android.database.DataSetObserver;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import com.teamtba.quizfoundation.ExpandableListAdapter;
+
+import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.Toast;
 
@@ -14,7 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class QuizSelector extends AppCompatActivity {
+public class QuizSelector extends AppCompatActivity implements View.OnClickListener {
 
     //initialize our expandable List view and it's adapter
     ExpandableListView listView;
@@ -28,16 +31,18 @@ public class QuizSelector extends AppCompatActivity {
 
     QuizDatabase.Instance instance = QuizDatabase.getInstance();
 
+    String selectedQuiz;
+
     //initialize
+    Button addNewQuiz;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz_selector);
 
-
+        addNewQuiz = findViewById(R.id.addNewQuizButton);
         listView =  findViewById(R.id.quizSelectorList);
-        //listView = new com.teamtba.quizfoundation.ExpandableListAdapter(this, subjects, subQuiz);
         // initializing the listeners
         initListeners();
 
@@ -46,6 +51,11 @@ public class QuizSelector extends AppCompatActivity {
 
         // preparing list data
         initializeAdapterData();
+
+        //if addNewQuiz button is clicked, move to the QuestionEditorActivity Page
+        addNewQuiz.setOnClickListener(this);
+
+
     }
 
     private void initListeners() {
@@ -56,14 +66,22 @@ public class QuizSelector extends AppCompatActivity {
             @Override
             public boolean onChildClick(ExpandableListView parent, View v,
                                         int groupPosition, int childPosition, long id) {
+                //grab the selected quiz Category, store that information into
+                //selectedQuiz variable
+                selectedQuiz = subQuiz.get(subjects.get(groupPosition)).get(childPosition).name;
                 Toast.makeText(
                         getApplicationContext(),
-                        subjects.get(groupPosition)
+                        subjects.get(groupPosition).name
                                 + " : "
                                 + subQuiz.get(
                                 subjects.get(groupPosition)).get(
-                                childPosition), Toast.LENGTH_SHORT)
+                                childPosition).name, Toast.LENGTH_SHORT)
                         .show();
+                //once item is selected, move to QuizAction
+                Intent intent = new Intent(QuizSelector.this, QuizAction.class);
+                //attach our selectedQuiz to our intent
+                intent.putExtra("selectedQuiz", selectedQuiz);
+                startActivity(intent);
                 return false;
             }
         });
@@ -175,5 +193,11 @@ public class QuizSelector extends AppCompatActivity {
         */
         // notify the adapter
         listViewAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onClick(View v) {
+        Intent intent = new Intent(QuizSelector.this, QuestionEditorActivity.class);
+        startActivity(intent);
     }
 }

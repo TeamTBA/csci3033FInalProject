@@ -19,7 +19,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     private Activity context;
 
     // List Items
-    List<String> subjects;
+    List<QuizDatabase.Subject> subjects;
 
     //proper List Items
    // List<QuizDatabase.Subject> subjects;
@@ -33,7 +33,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     Map<QuizDatabase.Subject, List<QuizDatabase.Subcategory>> subQuiz;
 
 
-    public ExpandableListAdapter(Activity context, List<String> subjects, Map<QuizDatabase.Subject, List<QuizDatabase.Subcategory>> subQuiz) {
+    public ExpandableListAdapter(Activity context, List<QuizDatabase.Subject> subjects, Map<QuizDatabase.Subject, List<QuizDatabase.Subcategory>> subQuiz) {
         this.context = context;
         this.subjects = subjects;
         this.subQuiz = subQuiz;
