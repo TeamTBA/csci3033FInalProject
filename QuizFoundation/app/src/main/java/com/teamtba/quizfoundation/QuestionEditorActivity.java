@@ -19,6 +19,7 @@ import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.Toast;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,7 +33,7 @@ public class QuestionEditorActivity extends AppCompatActivity {
     private enum TransactionMode { add, edit }
 
     // the type of object to pass to the intent args (with above name)
-    public static class IntentArgs
+    public static class IntentArgs implements Serializable
     {
         // the transaction mode of this invocation
         private TransactionMode mode;
@@ -331,7 +332,7 @@ public class QuestionEditorActivity extends AppCompatActivity {
         question.text = text;
         question.choices = _choi;
         question.answer = answer;
-        
+
         // save the result and return
         try
         {
