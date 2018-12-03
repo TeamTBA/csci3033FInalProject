@@ -13,6 +13,7 @@ import com.teamtba.quizfoundation.ExpandableListAdapter;
 
 import android.widget.Button;
 import android.widget.ExpandableListView;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -35,7 +36,7 @@ public class QuizSelector extends AppCompatActivity implements View.OnClickListe
     String selectedQuiz;
 
     //initialize
-    Button addNewQuiz;
+    ImageButton addNewQuiz;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
