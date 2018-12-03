@@ -77,29 +77,32 @@ public class QuizDatabase
     public static Instance getInstance() { return Instance.instance; }
 
     // loads the question database from the question file.
-    // returns true iff the file was successfully loaded.
-    // on failure, the instance is not modified.
-    public static boolean load(Context context) throws IOError, IOException, ClassNotFoundException
+    // if the file doesn't exist, loads nothing (as if the file existed and held an empty database)
+    public static void load(Context context) throws IOError, IOException, ClassNotFoundException
     {
         try (ObjectInputStream f = new ObjectInputStream(context.openFileInput(dbfilename)))
         {
             Instance obj = (Instance)f.readObject();
             Instance.instance.subjects = obj.subjects;
-            return true;
         }
         // if the file doesn't exist, that's ok
-        catch (FileNotFoundException ex) { return false; }
+        catch (FileNotFoundException ex)
+        {
+            Instance obj = new Instance();
+            Instance.instance.subjects = obj.subjects;
+        }
     }
     // stores the question database to the question file.
     // returns true iff the file was saved successfully.
-    public static boolean store(Context context) throws IOError, IOException, ClassNotFoundException
+    public static void store(Context context) throws IOError, IOException, ClassNotFoundException
     {
         try (ObjectOutputStream f = new ObjectOutputStream(context.openFileOutput(dbfilename, 0)))
         {
             f.writeObject(Instance.instance);
-            return true;
         }
     }
+
+    // ---------------------------------
 
     public static Subcategory getSubCategory(String string)
     {
