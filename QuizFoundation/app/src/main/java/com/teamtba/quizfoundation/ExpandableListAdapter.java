@@ -18,18 +18,11 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
     private Activity context;
 
-    // List Items
+    // List / Parent items
     List<QuizDatabase.Subject> subjects;
 
-    //proper List Items
-   // List<QuizDatabase.Subject> subjects;
-
-    // Child List Items
-    //Map<QuizDatabase.Subject, List<QuizDatabase.Subcategory>> subCategories;
-
-    //dummy child list Items to test
-    //Map<String, List<String>> subCategories;
-    //proper storage
+    //the children in expandable list are stored as a map
+    //each list of children is mapped to 1 subject
     Map<QuizDatabase.Subject, List<QuizDatabase.Subcategory>> subQuiz;
 
 
@@ -40,9 +33,9 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     }
 
     @Override
-    public Object getChild(int groupPosition, int childPosititon) {
+    public Object getChild(int groupPosition, int childPosition) {
         return this.subQuiz.get(this.subjects.get(groupPosition))
-                .get(childPosititon);
+                .get(childPosition);
     }
 
     @Override
@@ -52,21 +45,23 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public View getChildView(int groupPosition, final int childPosition,
-                             boolean isLastChild, View convertView, ViewGroup parent) {
+                             boolean isLastChild, View view, ViewGroup parent) {
 
-        final String childText = (String) getChild(groupPosition, childPosition);
+        QuizDatabase.Subcategory childCategory = (QuizDatabase.Subcategory) getChild(groupPosition, childPosition);
 
-        if (convertView == null) {
+        final String categoryName = childCategory.name;
+
+        if (view == null) {
             LayoutInflater layoutInflater = (LayoutInflater) this.context
                     .getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
-            convertView = layoutInflater.inflate(R.layout.activity_quiz_selector_list_child, null);
+            view = layoutInflater.inflate(R.layout.activity_quiz_selector_list_child, null);
         }
 
-        TextView textViewChild = convertView
+        TextView selectedChild = view
                 .findViewById(R.id.quizSelectorListChild);
 
-        textViewChild.setText(childText);
-        return convertView;
+        selectedChild.setText(categoryName);
+        return view;
     }
 
     @Override
@@ -92,19 +87,21 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public View getGroupView(int groupPosition, boolean isExpanded,
-                             View convertView, ViewGroup parent) {
-        String headerTitle = (String) getGroup(groupPosition);
-        if (convertView == null) {
+                             View view, ViewGroup parent) {
+
+        QuizDatabase.Subject groupSubject = (QuizDatabase.Subject) getGroup(groupPosition);
+        String subjectName = groupSubject.name;
+        if (view == null) {
             LayoutInflater layoutInflater = (LayoutInflater) this.context
                     .getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
-            convertView = layoutInflater.inflate(R.layout.activity_quiz_selector_list_items, null);
+            view = layoutInflater.inflate(R.layout.activity_quiz_selector_list_items, null);
         }
 
-        TextView textViewGroup = convertView
+        TextView selectedGroup = view
                 .findViewById(R.id.categorySelection);
-        textViewGroup.setText(headerTitle);
+        selectedGroup.setText(subjectName);
 
-        return convertView;
+        return view;
     }
 
     @Override

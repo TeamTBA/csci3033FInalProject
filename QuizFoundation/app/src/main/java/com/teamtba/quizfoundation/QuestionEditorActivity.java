@@ -1,5 +1,6 @@
 package com.teamtba.quizfoundation;
 
+import android.content.Intent;
 import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -18,30 +19,74 @@ import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.Toast;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 public class QuestionEditorActivity extends AppCompatActivity {
 
-    // these static fields are how we'll communicate between activities.
-    // since android can't have multiple instances of the same activity open at any time this is safe.
+    // -- intent objects -- //
 
-    // accept marks if the user confirmed the changes.
-    // subject/subcategory are >= 0 for a pre-existing value or < 0 for a new value.
-    // if < 0 (new value) is selected, the text field is the name of the desired new subject/subcategory.
-    // choices length must be in the range [0, 4]
+    // the name of the expected intent args object
+    public static final String INTENT_ARGS_NAME = "intent_args_name";
 
-    public static boolean ACCEPT = false;
+    private enum TransactionMode { add, edit }
 
-    public static int SUBJECT = -1;
-    public static String SUBJECT_TEXT = null;
+    // the type of object to pass to the intent args (with above name)
+    public static class IntentArgs implements Serializable
+    {
+        // the transaction mode of this invocation
+        private TransactionMode mode;
 
-    public static int SUBCATEGORY = -1;
-    public static String SUBCATEGORY_TEXT = null;
+        // the subject/subcategory for the question
+        private int subject;
+        private int subcategory;
 
-    public static String TEXT = null;
-    public static String[] CHOICES = null;
-    public static int ANSWER = -1;
+        // the location of the question in the subject/subcategory pair - only used for edit mode
+        private int question;
+
+        // --------------------------------
+
+        private IntentArgs() {}
+
+        // creates args for adding a new question to the database.
+        static IntentArgs NewQuestion()
+        {
+            IntentArgs args = new IntentArgs();
+
+            args.mode = TransactionMode.add;
+            args.subject = args.subcategory = -1;
+            args.question = -1;
+
+            return args;
+        }
+        // creates args for adding a new question to the specified subject and subcategory.
+        // this is only the starting position - the user can elect to put it elsewhere.
+        static IntentArgs NewQuestion(int subject, int subcategory)
+        {
+            IntentArgs args = new IntentArgs();
+
+            args.mode = TransactionMode.add;
+            args.subject = subject;
+            args.subcategory = subcategory;
+            args.question = -1;
+
+            return args;
+        }
+
+        // creates args for editing a pre-existing question given its subject and subcategory
+        static IntentArgs EditQuestion(int subject, int subcategory, int question)
+        {
+            IntentArgs args = new IntentArgs();
+
+            args.mode = TransactionMode.edit;
+            args.subject = subject;
+            args.subcategory = subcategory;
+            args.question = question;
+
+            return args;
+        }
+    }
 
     // -------------------------------------------------
 
@@ -68,12 +113,15 @@ public class QuestionEditorActivity extends AppCompatActivity {
         }
     }
 
+    IntentArgs args = null;
+    QuizDatabase.Question question = null; // the question to edit (only defined in edit mode)
+
     private SelectorSet subjectSelector, subcategorySelector;
     private EditText textBox;
     private ChoiceSet[] choices;
 
-    private String[] subjects;
-    private String[][] subcategories;
+    private String[] subjects = null;
+    private String[][] subcategories = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,8 +154,7 @@ public class QuestionEditorActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 subjectSelector.text.setVisibility(position == subjectSelector.spinner.getAdapter().getCount() - 1 ? View.VISIBLE : View.INVISIBLE);
 
-                subcategorySelector.spinner.setAdapter(new ArrayAdapter<String>(
-                        QuestionEditorActivity.this, android.R.layout.simple_list_item_1, subcategories[position]));
+                subcategorySelector.spinner.setAdapter(new ArrayAdapter<String>(QuestionEditorActivity.this, android.R.layout.simple_list_item_1, subcategories[position]));
             }
 
             @Override
@@ -127,7 +174,8 @@ public class QuestionEditorActivity extends AppCompatActivity {
             }
         });
 
-        for (ChoiceSet choice : choices){
+        for (ChoiceSet choice : choices)
+        {
             choice.checkbox.setOnCheckedChangeListener((e, v) -> {
                 if (v) {
                     for (ChoiceSet other : choices)
@@ -136,30 +184,125 @@ public class QuestionEditorActivity extends AppCompatActivity {
             });
         }
 
-        findViewById(R.id.accept_button).setOnClickListener(e -> {
-            if (StoreValues()) {
-                ACCEPT = true;
-                finish();
-            }
-        });
+        findViewById(R.id.accept_button).setOnClickListener(e -> ProcessAccept());
+
     }
 
-    // stores the current values into the static variables
-    private boolean StoreValues()
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        // get the intent args
+        args = (IntentArgs)getIntent().getSerializableExtra(INTENT_ARGS_NAME);
+
+        // -- set up the spinners -- //
+
+        UpdateCategories();
+
+        subjectSelector.spinner.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, subjects));
+        subcategorySelector.spinner.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, subcategories[0]));
+
+        // navigate to the pre-set item
+        subjectSelector.spinner.setSelection(args.subject);
+        subcategorySelector.spinner.setSelection(args.subcategory);
+
+        // -- set up the requested info -- //
+
+        // if we're in edit mode, get question info
+        if (args.mode == TransactionMode.edit)
+        {
+            // get the question
+            question = QuizDatabase.getInstance()
+                    .subjects.get(args.subject)
+                    .subcategories.get(args.subcategory)
+                    .questions.get(args.question);
+
+            textBox.setText(question.text);
+
+            for (int i = 0; i < choices.length; ++i)
+            {
+                choices[i].text.setText(i < question.choices.length ? question.choices[i] : "");
+            }
+
+            // check answer - this will propagate and uncheck all others due to the event handler
+            choices[question.answer].checkbox.setChecked(true);
+        }
+        // if we're in add mode, fill with blanks
+        else if (args.mode == TransactionMode.add)
+        {
+            question = null;
+
+            textBox.setText("");
+
+            for (int i = 0; i < choices.length; ++i)
+            {
+                choices[i].text.setText("");
+                choices[i].checkbox.setChecked(false);
+            }
+        }
+        // otherwise unknown transaction mode
+        else { throw new IllegalArgumentException("unknown question editor transaction mode"); }
+    }
+
+    // processes the actions of the accept button
+    private void ProcessAccept()
     {
+        QuizDatabase.Instance instance = QuizDatabase.getInstance();
+
+        // -- validate subject / subcategory -- //
 
         int subject = subjectSelector.spinner.getSelectedItemPosition();
-        SUBJECT = subject < subjectSelector.spinner.getCount() - 1 ? subject : -1;
+        subject = subject < subjectSelector.spinner.getCount() - 1 ? subject : -1;
 
         int subcategory = subcategorySelector.spinner.getSelectedItemPosition();
-        SUBCATEGORY = subcategory < subcategorySelector.spinner.getCount() - 1 ? subcategory : -1;
+        subcategory = subcategory < subcategorySelector.spinner.getCount() - 1 ? subcategory : -1;
 
-        SUBJECT_TEXT = SUBJECT < 0 ? subjectSelector.text.getText().toString() : null;
-        SUBCATEGORY_TEXT = SUBCATEGORY < 0 ? subcategorySelector.text.getText().toString() : null;
+        String subject_text = null;
+        String subcategory_text = null;
 
-        TEXT = textBox.getText().toString();
+        if (subject < 0){
+            subject_text = subjectSelector.text.getText().toString().trim();
 
-        List<String> choi = new ArrayList<String>(choices.length);
+            // can't be empty string
+            if (subject_text.isEmpty()){
+                Toast.makeText(this, "New subject name cannot be blank", Toast.LENGTH_LONG).show();
+                return;
+            }
+            // can't already exist
+            if (instance.findSubject(subject_text) != null){
+                Toast.makeText(this, "New subject name already exists", Toast.LENGTH_LONG).show();
+                return;
+            }
+        }
+
+        if (subcategory < 0){
+            subcategory_text = subcategorySelector.text.getText().toString().trim();
+
+            // can't be empty string
+            if (subcategory_text.isEmpty()){
+                Toast.makeText(this, "New subcategory name cannot be blank", Toast.LENGTH_LONG).show();
+                return;
+            }
+            // can't already exist
+            if (subject < instance.subjects.size() && instance.subjects.get(subject).findSubcategory(subcategory_text) != null){
+                Toast.makeText(this, "New subcategory name already exists", Toast.LENGTH_LONG).show();
+                return;
+            }
+        }
+
+        // -- validate text -- //
+
+        String text = textBox.getText().toString().trim();
+
+        // can't be empty
+        if (text.isEmpty()){
+            Toast.makeText(this, "Question field cannot be blank", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        // -- calidate choices / aswer -- //
+
+        List<String> _choices = new ArrayList<String>(choices.length);
         int answer = -1;
 
         for (int i = 0; i < choices.length; ++i)
@@ -168,67 +311,93 @@ public class QuestionEditorActivity extends AppCompatActivity {
                 if (answer < 0) answer = i;
                 else {
                     Toast.makeText(this, "There can only be one answer", Toast.LENGTH_LONG).show();
-                    return false;
+                    return;
                 }
             }
 
             String str = choices[i].text.getText().toString().trim();
 
-            if (!str.isEmpty()) choi.add(str);
+            if (!str.isEmpty()) _choices.add(str);
             else if (choices[i].checkbox.isChecked()) {
                 Toast.makeText(this, "Answer cannot be blank", Toast.LENGTH_LONG).show();
-                return false;
+                return;
             }
         }
 
-        if (choi.isEmpty()){
+        if (_choices.isEmpty()){
             Toast.makeText(this, "Must have at least one choice", Toast.LENGTH_LONG).show();
-            return false;
+            return;
         }
         if (answer < 0){
             Toast.makeText(this, "Must have an answer", Toast.LENGTH_LONG).show();
-            return false;
+            return;
         }
 
-        String[] _choi = new String[choi.size()];
-        for (int i = 0; i < choi.size(); ++i) _choi[i] = choi.get(i);
-        CHOICES = _choi;
+        // -- handle database insertions -- //
 
-        ANSWER = answer;
+        // switch on mode
+        switch(args.mode)
+        {
+            case add:
 
-        return true;
-    }
+                // create the subject if it doesn't exist
+                if (subject < 0)
+                {
+                    QuizDatabase.Subject s = new QuizDatabase.Subject();
+                    s.name = subject_text;
 
-    @Override
-    protected void onStart() {
-        super.onStart();
+                    subject = instance.subjects.size();
+                    instance.subjects.add(s);
+                }
+                // create the subcategory if it doesn't exist
+                if (subcategory < 0)
+                {
+                    QuizDatabase.Subcategory s = new QuizDatabase.Subcategory();
+                    s.name = subcategory_text;
 
-        // mark as not accepted
-        ACCEPT = false;
+                    subcategory = instance.subjects.get(subject).subcategories.size();
+                    instance.subjects.get(subject).subcategories.add(s);
+                }
 
-        // -- set up the spinners -- //
+                // add the question
+                question = new QuizDatabase.Question();
+                instance.subjects.get(subject).subcategories.get(subcategory).questions.add(question);
 
-        UpdateCategories();
+                break;
 
-        subjectSelector.spinner.setSelection(0);
-        subcategorySelector.spinner.setSelection(0);
+            case edit:
 
-        subjectSelector.spinner.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, subjects));
-        subcategorySelector.spinner.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, subcategories[0]));
+                // no extra work here - merges with add case below
 
-        // -- set up the requested info -- //
+                break;
 
-        textBox.setText(TEXT != null ? TEXT : "");
+            default: throw new IllegalArgumentException("unknown question editor args mode");
+        }
 
-        for (int i = 0; i < choices.length; ++i){
-            choices[i].text.setText(CHOICES != null && i < CHOICES.length ? CHOICES[i] : "");
-            choices[i].checkbox.setChecked(ANSWER == i);
+        // -- final touches - apply the changes -- //
+
+        // update the question
+        question.text = text;
+        question.choices = _choices.toArray(new String[0]);
+        question.answer = answer;
+
+        // save the result and return
+        try
+        {
+            QuizDatabase.store(this);
+            finish(); // we're finally done! :D
+        }
+        catch (Exception ex)
+        {
+            Toast.makeText(this, "FAILED TO SAVE QUESTION DATABASE", Toast.LENGTH_LONG).show();
+            return;
         }
     }
 
     // updates the categories arrays but not the spinner adapters.
     // this should be called each time the activity is shown.
-    private void UpdateCategories(){
+    private void UpdateCategories()
+    {
         QuizDatabase.Instance instance = QuizDatabase.getInstance();
 
         subjects = new String[instance.subjects.size() + 1];
@@ -244,6 +413,8 @@ public class QuestionEditorActivity extends AppCompatActivity {
 
             subcategories[i][subj.subcategories.size()] = "New Entry";
         }
+
         subjects[instance.subjects.size()] = "New Entry";
+        subcategories[instance.subjects.size()] = new String[] { "New Entry" };
     }
 }

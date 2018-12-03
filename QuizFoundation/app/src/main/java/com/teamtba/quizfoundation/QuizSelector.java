@@ -13,6 +13,7 @@ import com.teamtba.quizfoundation.ExpandableListAdapter;
 
 import android.widget.Button;
 import android.widget.ExpandableListView;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -22,7 +23,8 @@ import java.util.Map;
 
 import static com.teamtba.quizfoundation.QuizDatabase.load;
 
-public class QuizSelector extends AppCompatActivity implements View.OnClickListener {
+public class QuizSelector extends AppCompatActivity {
+
 
     //initialize our expandable List view and it's adapter
     ExpandableListView listView;
@@ -37,7 +39,7 @@ public class QuizSelector extends AppCompatActivity implements View.OnClickListe
     String selectedQuiz;
 
     //initialize
-    Button addNewQuiz;
+    ImageButton addNewQuiz;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,19 +48,64 @@ public class QuizSelector extends AppCompatActivity implements View.OnClickListe
 
         //QuizDatabase.load(this);
 
+        // -- example pre-populated data -- //
+        /**/
+
+        QuizDatabase.Instance instance = QuizDatabase.getInstance();
+
+        QuizDatabase.Subcategory calculus = new QuizDatabase.Subcategory();
+        calculus.name = "Calculus";
+        QuizDatabase.Subcategory algebra = new QuizDatabase.Subcategory();
+        algebra.name = "Algebra";
+        QuizDatabase.Subcategory geometry = new QuizDatabase.Subcategory();
+        geometry.name = "Geometry";
+
+        QuizDatabase.Subcategory physics = new QuizDatabase.Subcategory();
+        physics.name = "Physics";
+        QuizDatabase.Subcategory chemistry = new QuizDatabase.Subcategory();
+        chemistry.name = "Chemistry";
+
+        QuizDatabase.Subject math = new QuizDatabase.Subject();
+        math.name = "Math";
+        math.subcategories.add(calculus);
+        math.subcategories.add(algebra);
+        math.subcategories.add(geometry);
+
+        QuizDatabase.Subject science = new QuizDatabase.Subject();
+        science.name = "Science";
+        science.subcategories.add(physics);
+        science.subcategories.add(chemistry);
+
+        instance.subjects.add(math);
+        instance.subjects.add(science);
+
+        /**/
+        // ----------------------------------------
+
         addNewQuiz = findViewById(R.id.addNewQuizButton);
-       // listView =  findViewById(R.id.quizSelectorList);
-        // initializing the listeners for the expandable activity
-        //startExListeners();
 
-        // initializing the objects
-        initializeActivityObjects();
 
-        // preparing list data
-        initializeAdapterData();
+        // initialized all objects needed
+        ActivityObjects();
+
+        // call function that prepared our list
+        AdapterData();
+
+        //set our listeners for expandable list
+        startExListeners();
 
         //if addNewQuiz button is clicked, move to the QuestionEditorActivity Page
-        addNewQuiz.setOnClickListener(this);
+        addNewQuiz.setOnClickListener(e ->
+        {
+            Intent intent = new Intent(QuizSelector.this, QuestionEditorActivity.class);
+
+            QuestionEditorActivity.IntentArgs args = QuestionEditorActivity.IntentArgs.NewQuestion();
+            intent.putExtra(QuestionEditorActivity.INTENT_ARGS_NAME, args);
+
+            startActivity(intent);
+        });
+
+
 
 
     }
@@ -74,14 +121,6 @@ public class QuizSelector extends AppCompatActivity implements View.OnClickListe
                 //grab the selected quiz Category, store that information into
                 //selectedQuiz variable
                 selectedQuiz = subQuiz.get(subjects.get(groupPosition)).get(childPosition).name;
-                Toast.makeText(
-                        getApplicationContext(),
-                        subjects.get(groupPosition).name
-                                + " : "
-                                + subQuiz.get(
-                                subjects.get(groupPosition)).get(
-                                childPosition).name, Toast.LENGTH_SHORT)
-                        .show();
                 //once item is selected, move to QuizAction
                 Intent intent = new Intent(QuizSelector.this, QuizAction.class);
                 //attach our selectedQuiz to our intent
@@ -90,33 +129,24 @@ public class QuizSelector extends AppCompatActivity implements View.OnClickListe
                 return false;
             }
         });
-        // ExpandableListView Group expanded listener
         listView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
 
             @Override
             public void onGroupExpand(int groupPosition) {
-                Toast.makeText(getApplicationContext(),
-                        subjects.get(groupPosition).name,
-                        Toast.LENGTH_SHORT).show();
+                //do nothing
             }
         });
-
-        // ExpandableListView Group collapsed listener
         listView.setOnGroupCollapseListener(new ExpandableListView.OnGroupCollapseListener() {
 
             @Override
             public void onGroupCollapse(int groupPosition) {
-                Toast.makeText(getApplicationContext(),
-                        subjects.get(groupPosition).name,
-                        Toast.LENGTH_SHORT).show();
-
+               //do nothing
             }
         });
     }
 
 
-
-    void initializeActivityObjects(){
+    void ActivityObjects() {
 
         // initializing the list of groups
         subjects = new ArrayList<>();
@@ -133,13 +163,12 @@ public class QuizSelector extends AppCompatActivity implements View.OnClickListe
     }
 
 
-    private void initializeAdapterData() {
+    private void AdapterData() {
 
 
-        // data properly from quizDB disk, update once full functionality is established
+        // data populates from quizDB disk,
 
-        for (int i = 0; i < instance.subjects.size(); i++)
-        {
+        for (int i = 0; i < instance.subjects.size(); i++) {
             subjects.add(instance.subjects.get(i));
             subQuiz.put(instance.subjects.get(i), instance.subjects.get(i).subcategories);
         }
@@ -191,9 +220,4 @@ public class QuizSelector extends AppCompatActivity implements View.OnClickListe
         listViewAdapter.notifyDataSetChanged();
     }
 
-    @Override
-    public void onClick(View v) {
-        Intent intent = new Intent(QuizSelector.this, QuestionEditorActivity.class);
-        startActivity(intent);
-    }
 }
