@@ -42,7 +42,7 @@ public class QuizAction extends AppCompatActivity implements View.OnClickListene
 
         //quizCategory = new ArrayList<QuizDatabase.Question>();
         selectedQuiz = getIntent().getStringExtra("selectedQuiz");
-        quizCategory = QuizDatabase.getSubCategory(selectedQuiz);
+        quizCategory = QuizDatabase.getSubcategory(selectedQuiz);
         myQuiz = new QuizTaker();
         myQuiz.totalQuestions = quizCategory.questions.size();
 

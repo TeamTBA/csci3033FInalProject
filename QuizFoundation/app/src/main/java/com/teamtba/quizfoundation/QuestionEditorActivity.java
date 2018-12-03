@@ -47,6 +47,8 @@ public class QuestionEditorActivity extends AppCompatActivity {
 
         // --------------------------------
 
+        private IntentArgs() {}
+
         // creates args for adding a new question to the database.
         static IntentArgs NewQuestion()
         {
@@ -172,7 +174,8 @@ public class QuestionEditorActivity extends AppCompatActivity {
             }
         });
 
-        for (ChoiceSet choice : choices){
+        for (ChoiceSet choice : choices)
+        {
             choice.checkbox.setOnCheckedChangeListener((e, v) -> {
                 if (v) {
                     for (ChoiceSet other : choices)
@@ -224,8 +227,8 @@ public class QuestionEditorActivity extends AppCompatActivity {
             // check answer - this will propagate and uncheck all others due to the event handler
             choices[question.answer].checkbox.setChecked(true);
         }
-        // otherwise put blanks
-        else
+        // if we're in add mode, fill with blanks
+        else if (args.mode == TransactionMode.add)
         {
             question = null;
 
@@ -237,23 +240,69 @@ public class QuestionEditorActivity extends AppCompatActivity {
                 choices[i].checkbox.setChecked(false);
             }
         }
+        // otherwise unknown transaction mode
+        else { throw new IllegalArgumentException("unknown question editor transaction mode"); }
     }
 
     // processes the actions of the accept button
     private void ProcessAccept()
     {
+        QuizDatabase.Instance instance = QuizDatabase.getInstance();
+
+        // -- validate subject / subcategory -- //
+
         int subject = subjectSelector.spinner.getSelectedItemPosition();
         subject = subject < subjectSelector.spinner.getCount() - 1 ? subject : -1;
 
         int subcategory = subcategorySelector.spinner.getSelectedItemPosition();
         subcategory = subcategory < subcategorySelector.spinner.getCount() - 1 ? subcategory : -1;
 
-        String subject_text = subject < 0 ? subjectSelector.text.getText().toString() : null;
-        String subcategory_text = subcategory < 0 ? subcategorySelector.text.getText().toString() : null;
+        String subject_text = null;
+        String subcategory_text = null;
 
-        String text = textBox.getText().toString();
+        if (subject < 0){
+            subject_text = subjectSelector.text.getText().toString().trim();
 
-        List<String> choi = new ArrayList<String>(choices.length);
+            // can't be empty string
+            if (subject_text.isEmpty()){
+                Toast.makeText(this, "New subject name cannot be blank", Toast.LENGTH_LONG).show();
+                return;
+            }
+            // can't already exist
+            if (instance.findSubject(subject_text) != null){
+                Toast.makeText(this, "New subject name already exists", Toast.LENGTH_LONG).show();
+                return;
+            }
+        }
+
+        if (subcategory < 0){
+            subcategory_text = subcategorySelector.text.getText().toString().trim();
+
+            // can't be empty string
+            if (subcategory_text.isEmpty()){
+                Toast.makeText(this, "New subcategory name cannot be blank", Toast.LENGTH_LONG).show();
+                return;
+            }
+            // can't already exist
+            if (subject < instance.subjects.size() && instance.subjects.get(subject).findSubcategory(subcategory_text) != null){
+                Toast.makeText(this, "New subcategory name already exists", Toast.LENGTH_LONG).show();
+                return;
+            }
+        }
+
+        // -- validate text -- //
+
+        String text = textBox.getText().toString().trim();
+
+        // can't be empty
+        if (text.isEmpty()){
+            Toast.makeText(this, "Question field cannot be blank", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        // -- calidate choices / aswer -- //
+
+        List<String> _choices = new ArrayList<String>(choices.length);
         int answer = -1;
 
         for (int i = 0; i < choices.length; ++i)
@@ -268,14 +317,14 @@ public class QuestionEditorActivity extends AppCompatActivity {
 
             String str = choices[i].text.getText().toString().trim();
 
-            if (!str.isEmpty()) choi.add(str);
+            if (!str.isEmpty()) _choices.add(str);
             else if (choices[i].checkbox.isChecked()) {
                 Toast.makeText(this, "Answer cannot be blank", Toast.LENGTH_LONG).show();
                 return;
             }
         }
 
-        if (choi.isEmpty()){
+        if (_choices.isEmpty()){
             Toast.makeText(this, "Must have at least one choice", Toast.LENGTH_LONG).show();
             return;
         }
@@ -284,11 +333,7 @@ public class QuestionEditorActivity extends AppCompatActivity {
             return;
         }
 
-        String[] _choi = new String[choi.size()];
-        for (int i = 0; i < choi.size(); ++i) _choi[i] = choi.get(i);
-
-        // get the database instance
-        QuizDatabase.Instance instance = QuizDatabase.getInstance();
+        // -- handle database insertions -- //
 
         // switch on mode
         switch(args.mode)
@@ -329,9 +374,11 @@ public class QuestionEditorActivity extends AppCompatActivity {
             default: throw new IllegalArgumentException("unknown question editor args mode");
         }
 
+        // -- final touches - apply the changes -- //
+
         // update the question
         question.text = text;
-        question.choices = _choi;
+        question.choices = _choices.toArray(new String[0]);
         question.answer = answer;
 
         // save the result and return

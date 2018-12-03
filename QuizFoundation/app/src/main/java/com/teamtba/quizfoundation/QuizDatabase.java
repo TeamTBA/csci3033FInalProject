@@ -46,6 +46,14 @@ public class QuizDatabase
     {
         public String name = "Unnamed";
         public List<Subcategory> subcategories = new ArrayList<Subcategory>();
+
+        // returns the first subcategory with the given name or null if none exists
+        public Subcategory findSubcategory(String name){
+            for (Subcategory i : subcategories)
+                if (i.name.equals(name)) return i;
+
+            return null;
+        }
     }
 
     // ------------------- //
@@ -63,6 +71,14 @@ public class QuizDatabase
         private static final Instance instance = new Instance();
 
         public List<Subject> subjects = new ArrayList<Subject>();
+
+        // returns the first subject with the given name or null if none exists
+        public Subject findSubject(String name){
+            for (Subject i : subjects)
+                if (i.name.equals(name)) return i;
+
+            return null;
+        }
     }
 
     private static final String dbfilename = "QuestionDatabase.dat";
@@ -107,17 +123,17 @@ public class QuizDatabase
     public static Subject getSubject(String name)
     {
         for (Subject subject : getInstance().subjects)
-            if (subject.name == name) return subject;
+            if (subject.name.equals(name)) return subject;
 
         return null;
     }
 
     // if (name) is the name of a subcategory, returns the subcategory. otherwise returns null.
-    public static Subcategory getSubCategory(String name)
+    public static Subcategory getSubcategory(String name)
     {
         for (Subject subject : getInstance().subjects)
             for (Subcategory subcategory : subject.subcategories)
-                if (subcategory.name == name) return subcategory;
+                if (subcategory.name.equals(name)) return subcategory;
 
         return null;
     }
