@@ -97,16 +97,6 @@ public class QuizAction extends AppCompatActivity implements View.OnClickListene
         intent.putExtra("myQuiz", myQuiz);
         startActivity(intent);
 
-
-
-
-
-
-        /*when filling in the QuizAction activity
-        if choices.size == 2;, no action on buttons
-        if choices.size == 3; make button for AnswerTwo set to visible
-        if choices.size == 4; make button for answerThree set to visible
-        ****Make sure to revert back to invisible for 2/3***/
     }
 
     @Override

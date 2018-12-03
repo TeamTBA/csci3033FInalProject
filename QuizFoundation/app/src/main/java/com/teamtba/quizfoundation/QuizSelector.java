@@ -20,11 +20,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.teamtba.quizfoundation.QuizDatabase.load;
+
 public class QuizSelector extends AppCompatActivity implements View.OnClickListener {
 
     //initialize our expandable List view and it's adapter
-   // ExpandableListView listView;
-    //com.teamtba.quizfoundation.ExpandableListAdapter listViewAdapter;
+    ExpandableListView listView;
+    com.teamtba.quizfoundation.ExpandableListAdapter listViewAdapter;
     List<QuizDatabase.Subcategory> subCategories;
     List<QuizDatabase.Subject> subjects;
     Map<QuizDatabase.Subject, List<QuizDatabase.Subcategory>> subQuiz;
@@ -50,17 +52,17 @@ public class QuizSelector extends AppCompatActivity implements View.OnClickListe
         //startExListeners();
 
         // initializing the objects
-        //initializeActivityObjects();
+        initializeActivityObjects();
 
         // preparing list data
-        //initializeAdapterData();
+        initializeAdapterData();
 
         //if addNewQuiz button is clicked, move to the QuestionEditorActivity Page
         addNewQuiz.setOnClickListener(this);
 
 
     }
-/*
+
     private void startExListeners() {
 
         // ExpandableListView on child click listener
@@ -125,9 +127,6 @@ public class QuizSelector extends AppCompatActivity implements View.OnClickListe
         //creating map
         subQuiz = new HashMap<QuizDatabase.Subject, List<QuizDatabase.Subcategory>>();
 
-        // initializing the adapter object
-        //listViewAdapter = new com.teamtba.quizfoundation.ExpandableListAdapter(this, subjects, subQuiz);
-
         // setting list adapter
         listView.setAdapter(listViewAdapter);
 
@@ -187,11 +186,11 @@ public class QuizSelector extends AppCompatActivity implements View.OnClickListe
         subQuiz.put(subjects.get(1), historyList);
         subQuiz.put(subjects.get(2), scienceList);
         subQuiz.put(subjects.get(3), otherList);
-
+        */
         // notify the adapter
         listViewAdapter.notifyDataSetChanged();
     }
-*/
+
     @Override
     public void onClick(View v) {
         Intent intent = new Intent(QuizSelector.this, QuestionEditorActivity.class);

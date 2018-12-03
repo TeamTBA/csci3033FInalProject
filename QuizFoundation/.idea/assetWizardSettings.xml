@@ -40,17 +40,27 @@
                                           </PersistentState>
                                         </value>
                                       </entry>
+                                      <entry key="foregroundImage">
+                                        <value>
+                                          <PersistentState>
+                                            <option name="values">
+                                              <map>
+                                                <entry key="scalingPercent" value="85" />
+                                              </map>
+                                            </option>
+                                          </PersistentState>
+                                        </value>
+                                      </entry>
                                     </map>
                                   </option>
                                   <option name="values">
                                     <map>
                                       <entry key="backgroundAssetType" value="COLOR" />
-                                      <entry key="backgroundColor" value="ed2c1d" />
+                                      <entry key="backgroundColor" value="fdfdfe" />
                                       <entry key="backgroundLayerName" value="delete_question_icon_back" />
-                                      <entry key="foregroundAssetType" value="CLIP_ART" />
-                                      <entry key="foregroundImage" value="C:\Users\srhoa\Desktop\history_logo.png" />
-                                      <entry key="foregroundLayerName" value="delete_question_icon_fore" />
-                                      <entry key="outputName" value="delete_question_icon" />
+                                      <entry key="foregroundImage" value="C:\Users\srhoa\Downloads\my_logo(3).png" />
+                                      <entry key="foregroundLayerName" value="launch_icon_new" />
+                                      <entry key="outputName" value="launch_icon" />
                                     </map>
                                   </option>
                                 </PersistentState>
