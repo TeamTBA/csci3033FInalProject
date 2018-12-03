@@ -9,19 +9,20 @@
         android:roundIcon="@mipmap/launch_icon_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".QuizResults" />
+        <activity android:name=".QuizResults"/>
         <activity
             android:name=".QuestionEditorActivity"
             android:label="@string/title_activity_question_editor"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".QuizSelector">
+        <activity android:name=".QuizSelector"/>
+        <activity android:name=".QuizAction">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".QuizAction"></activity>
     </application>
 
 </manifest>

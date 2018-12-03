@@ -51,7 +51,7 @@ public class QuizResults extends AppCompatActivity implements View.OnClickListen
             failNotice.setVisibility(View.INVISIBLE);
         }
 
-        gradePercentage.setText(String.valueOf(takenQuiz.getQuizScore()));
+        gradePercentage.setText(String.valueOf(takenQuiz.getQuizScore() * 100.00));
         incorrectAnswersNotice.setText("You answered " + String.valueOf(takenQuiz.incorrectAnswers.size()) + " Questions Incorrectly");
 
         //listen to see if user chooses to go back to Select a New Quiz
