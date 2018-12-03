@@ -21,7 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class QuizSelector extends AppCompatActivity implements View.OnClickListener {
+public class QuizSelector extends AppCompatActivity {
 
     //initialize our expandable List view and it's adapter
    // ExpandableListView listView;
@@ -57,7 +57,17 @@ public class QuizSelector extends AppCompatActivity implements View.OnClickListe
         //initializeAdapterData();
 
         //if addNewQuiz button is clicked, move to the QuestionEditorActivity Page
-        addNewQuiz.setOnClickListener(this);
+        addNewQuiz.setOnClickListener(e ->
+        {
+            System.out.println("here");
+
+            Intent intent = new Intent(QuizSelector.this, QuestionEditorActivity.class);
+
+            QuestionEditorActivity.IntentArgs args = QuestionEditorActivity.IntentArgs.NewQuestion();
+            intent.putExtra(QuestionEditorActivity.INTENT_ARGS_NAME, args);
+
+            startActivity(intent);
+        });
 
 
     }
@@ -193,9 +203,4 @@ public class QuizSelector extends AppCompatActivity implements View.OnClickListe
         listViewAdapter.notifyDataSetChanged();
     }
 */
-    @Override
-    public void onClick(View v) {
-        Intent intent = new Intent(QuizSelector.this, QuestionEditorActivity.class);
-        startActivity(intent);
-    }
 }

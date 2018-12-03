@@ -152,8 +152,7 @@ public class QuestionEditorActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 subjectSelector.text.setVisibility(position == subjectSelector.spinner.getAdapter().getCount() - 1 ? View.VISIBLE : View.INVISIBLE);
 
-                subcategorySelector.spinner.setAdapter(new ArrayAdapter<String>(
-                        QuestionEditorActivity.this, android.R.layout.simple_list_item_1, subcategories[position]));
+                subcategorySelector.spinner.setAdapter(new ArrayAdapter<String>(QuestionEditorActivity.this, android.R.layout.simple_list_item_1, subcategories[position]));
             }
 
             @Override
@@ -183,6 +182,7 @@ public class QuestionEditorActivity extends AppCompatActivity {
         }
 
         findViewById(R.id.accept_button).setOnClickListener(e -> ProcessAccept());
+
     }
 
     @Override
@@ -196,11 +196,12 @@ public class QuestionEditorActivity extends AppCompatActivity {
 
         UpdateCategories();
 
-        subjectSelector.spinner.setSelection(0);
-        subcategorySelector.spinner.setSelection(0);
-
         subjectSelector.spinner.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, subjects));
         subcategorySelector.spinner.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, subcategories[0]));
+
+        // navigate to the pre-set item
+        subjectSelector.spinner.setSelection(args.subject);
+        subcategorySelector.spinner.setSelection(args.subcategory);
 
         // -- set up the requested info -- //
 
@@ -348,7 +349,8 @@ public class QuestionEditorActivity extends AppCompatActivity {
 
     // updates the categories arrays but not the spinner adapters.
     // this should be called each time the activity is shown.
-    private void UpdateCategories(){
+    private void UpdateCategories()
+    {
         QuizDatabase.Instance instance = QuizDatabase.getInstance();
 
         subjects = new String[instance.subjects.size() + 1];
@@ -364,6 +366,8 @@ public class QuestionEditorActivity extends AppCompatActivity {
 
             subcategories[i][subj.subcategories.size()] = "New Entry";
         }
+
         subjects[instance.subjects.size()] = "New Entry";
+        subcategories[instance.subjects.size()] = new String[] { "New Entry" };
     }
 }
