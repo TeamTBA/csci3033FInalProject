@@ -45,6 +45,40 @@ public class QuizSelector extends AppCompatActivity {
 
         //QuizDatabase.load(this);
 
+        // -- example pre-populated data -- //
+        /**/
+
+        QuizDatabase.Instance instance = QuizDatabase.getInstance();
+
+        QuizDatabase.Subcategory calculus = new QuizDatabase.Subcategory();
+        calculus.name = "Calculus";
+        QuizDatabase.Subcategory algebra = new QuizDatabase.Subcategory();
+        algebra.name = "Algebra";
+        QuizDatabase.Subcategory geometry = new QuizDatabase.Subcategory();
+        geometry.name = "Geometry";
+
+        QuizDatabase.Subcategory physics = new QuizDatabase.Subcategory();
+        physics.name = "Physics";
+        QuizDatabase.Subcategory chemistry = new QuizDatabase.Subcategory();
+        chemistry.name = "Chemistry";
+
+        QuizDatabase.Subject math = new QuizDatabase.Subject();
+        math.name = "Math";
+        math.subcategories.add(calculus);
+        math.subcategories.add(algebra);
+        math.subcategories.add(geometry);
+
+        QuizDatabase.Subject science = new QuizDatabase.Subject();
+        science.name = "Science";
+        science.subcategories.add(physics);
+        science.subcategories.add(chemistry);
+
+        instance.subjects.add(math);
+        instance.subjects.add(science);
+
+        /**/
+        // ----------------------------------------
+
         addNewQuiz = findViewById(R.id.addNewQuizButton);
        // listView =  findViewById(R.id.quizSelectorList);
         // initializing the listeners for the expandable activity
@@ -59,8 +93,6 @@ public class QuizSelector extends AppCompatActivity {
         //if addNewQuiz button is clicked, move to the QuestionEditorActivity Page
         addNewQuiz.setOnClickListener(e ->
         {
-            System.out.println("here");
-
             Intent intent = new Intent(QuizSelector.this, QuestionEditorActivity.class);
 
             QuestionEditorActivity.IntentArgs args = QuestionEditorActivity.IntentArgs.NewQuestion();

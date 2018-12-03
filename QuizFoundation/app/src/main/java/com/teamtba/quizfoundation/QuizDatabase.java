@@ -29,20 +29,20 @@ public class QuizDatabase
     // ------------------ //
 
     // represents a question from the database
-    public static class Question
+    public static class Question implements Serializable
     {
         public String text = "N/A";
         public String[] choices = {"N/A"};
         public int answer = 0;
     }
 
-    public static class Subcategory
+    public static class Subcategory implements Serializable
     {
         public String name = "Unnamed";
         public List<Question> questions = new ArrayList<Question>();
     }
 
-    public static class Subject
+    public static class Subject implements Serializable
     {
         public String name = "Unnamed";
         public List<Subcategory> subcategories = new ArrayList<Subcategory>();
@@ -56,7 +56,7 @@ public class QuizDatabase
 
     // represents the question database
     // this is a distinct type so that it can be serialized
-    public static class Instance
+    public static class Instance implements Serializable
     {
         // this is a singleton
         private Instance(){}
@@ -93,7 +93,6 @@ public class QuizDatabase
         }
     }
     // stores the question database to the question file.
-    // returns true iff the file was saved successfully.
     public static void store(Context context) throws IOError, IOException, ClassNotFoundException
     {
         try (ObjectOutputStream f = new ObjectOutputStream(context.openFileOutput(dbfilename, 0)))
@@ -104,26 +103,22 @@ public class QuizDatabase
 
     // ---------------------------------
 
-    public static Subcategory getSubCategory(String string)
+    // if (name) is the name of a subject, returns the subject. otherwise returns null.
+    public static Subject getSubject(String name)
     {
-        QuizDatabase.Subcategory selectedQuiz = null;
-        try
-        {
-            QuizDatabase.Instance instance = QuizDatabase.getInstance();
-            for (int i = 0; i < instance.subjects.size(); i++)
-            {
-                for (int j = 0; j < instance.subjects.get(i).subcategories.size(); j++)
-                {
-                    if (instance.subjects.get(i).subcategories.get(j).name == string)
-                        selectedQuiz = instance.subjects.get(i).subcategories.get(j);
+        for (Subject subject : getInstance().subjects)
+            if (subject.name == name) return subject;
 
-                }
-            }
-        }
-        catch(Exception e)
-        {
-            //
-        }
-        return selectedQuiz;
+        return null;
+    }
+
+    // if (name) is the name of a subcategory, returns the subcategory. otherwise returns null.
+    public static Subcategory getSubCategory(String name)
+    {
+        for (Subject subject : getInstance().subjects)
+            for (Subcategory subcategory : subject.subcategories)
+                if (subcategory.name == name) return subcategory;
+
+        return null;
     }
 }
