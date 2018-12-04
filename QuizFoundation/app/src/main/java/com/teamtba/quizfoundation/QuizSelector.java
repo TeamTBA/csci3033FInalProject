@@ -126,7 +126,7 @@ public class QuizSelector extends AppCompatActivity {
                 //once item is selected, move to QuizAction
                 Intent intent = new Intent(QuizSelector.this, QuizAction.class);
                 //attach our selectedQuiz to our intent
-                intent.putExtra("selectedQuiz", selectedQuiz);
+                intent.putExtra("selectedQuiz",selectedQuiz);
                 startActivity(intent);
                 return false;
             }
@@ -146,5 +146,5 @@ public class QuizSelector extends AppCompatActivity {
             }
         });
     }
-    
+
 }
