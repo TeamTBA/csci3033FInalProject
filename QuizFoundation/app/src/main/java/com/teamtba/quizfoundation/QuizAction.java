@@ -30,7 +30,6 @@ public class QuizAction extends AppCompatActivity implements View.OnClickListene
     //arrayList will hold the located Questions
     QuizDatabase.Subcategory quizCategory;
 
-
     //track number of questions taken
     int totalQuestions = 0;
 
@@ -42,21 +41,13 @@ public class QuizAction extends AppCompatActivity implements View.OnClickListene
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz_action);
 
-        QuizDatabase.Question newQuestion = new QuizDatabase.Question();
-        newQuestion.text = "This App Is Great!";
-        newQuestion.choices[0] = ("True");
-        newQuestion.choices[1] = ("False");
-        newQuestion.answer = 0;
-
 
         quizCategory.questions = new ArrayList<QuizDatabase.Question>();
-        quizCategory.questions.add(0, newQuestion);
         selectedQuiz = getIntent().getStringExtra("selectedQuiz");
-        //quizCategory = QuizDatabase.getSubcategory(selectedQuiz);
+        quizCategory = QuizDatabase.getSubcategory(selectedQuiz);
         myQuiz = new QuizTaker();
         myQuiz.totalQuestions = quizCategory.questions.size();
 
-        quizCategory.questions.add(1, newQuestion);
 
         //set buttons and textviews to their views
         answerZero = findViewById(R.id.answer0);

@@ -14,15 +14,16 @@
             android:name=".QuestionEditorActivity"
             android:label="@string/title_activity_question_editor"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".QuizSelector"/>
-        <activity android:name=".QuizAction">
+        <activity android:name=".QuizSelector">
 
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+    </activity>
+        <activity android:name=".QuizAction"/>
+
     </application>
 
 </manifest>

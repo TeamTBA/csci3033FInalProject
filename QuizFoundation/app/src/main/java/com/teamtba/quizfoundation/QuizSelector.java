@@ -21,7 +21,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.teamtba.quizfoundation.QuizDatabase.load;
+
+//-----------------------------------------------------------------------------
+//    ExpandableListView code developed / derived from tutorial found at;
+//   http://www.androidtutorialshub.com/android-expandable-list-view-tutorial/
+//-----------------------------------------------------------------------------
 
 public class QuizSelector extends AppCompatActivity {
 
@@ -29,12 +33,12 @@ public class QuizSelector extends AppCompatActivity {
     //initialize our expandable List view and it's adapter
     ExpandableListView listView;
     com.teamtba.quizfoundation.ExpandableListAdapter listViewAdapter;
-    List<QuizDatabase.Subcategory> subCategories;
     List<QuizDatabase.Subject> subjects;
     Map<QuizDatabase.Subject, List<QuizDatabase.Subcategory>> subQuiz;
 
 
-    QuizDatabase.Instance instance = QuizDatabase.getInstance();
+
+    //static QuizDatabase.Instance instance = QuizDatabase.getInstance();
 
     String selectedQuiz;
 
@@ -50,7 +54,8 @@ public class QuizSelector extends AppCompatActivity {
 
         // -- example pre-populated data -- //
         /**/
-
+        listView = findViewById(R.id.quizSelectorList);
+        addNewQuiz = findViewById(R.id.addNewQuizButton);
         QuizDatabase.Instance instance = QuizDatabase.getInstance();
 
         QuizDatabase.Subcategory calculus = new QuizDatabase.Subcategory();
@@ -76,22 +81,23 @@ public class QuizSelector extends AppCompatActivity {
         science.subcategories.add(physics);
         science.subcategories.add(chemistry);
 
-        instance.subjects.add(math);
-        instance.subjects.add(science);
+        subjects = new ArrayList<>();
+        subjects.add(math);
+        subjects.add(science);
 
-        /**/
-        // ----------------------------------------
+        //creating map
+        subQuiz = new HashMap<>();
 
-        addNewQuiz = findViewById(R.id.addNewQuizButton);
+        subQuiz.put(math, math.subcategories);
+        subQuiz.put(science, science.subcategories);
+
+        listViewAdapter = new com.teamtba.quizfoundation.ExpandableListAdapter(this, subjects, subQuiz);
+
+        // setting list adapter
+        listView.setAdapter(listViewAdapter);
 
 
-        // initialized all objects needed
-        ActivityObjects();
-
-        // call function that prepared our list
-        AdapterData();
-
-        //set our listeners for expandable list
+        //set listeners for our Expandable List Object
         startExListeners();
 
         //if addNewQuiz button is clicked, move to the QuestionEditorActivity Page
@@ -104,10 +110,6 @@ public class QuizSelector extends AppCompatActivity {
 
             startActivity(intent);
         });
-
-
-
-
     }
 
     private void startExListeners() {
@@ -144,80 +146,5 @@ public class QuizSelector extends AppCompatActivity {
             }
         });
     }
-
-
-    void ActivityObjects() {
-
-        // initializing the list of groups
-        subjects = new ArrayList<>();
-
-        // initializing the list of child
-        subCategories = new ArrayList<>();
-
-        //creating map
-        subQuiz = new HashMap<QuizDatabase.Subject, List<QuizDatabase.Subcategory>>();
-
-        // setting list adapter
-        listView.setAdapter(listViewAdapter);
-
-    }
-
-
-    private void AdapterData() {
-
-
-        // data populates from quizDB disk,
-
-        for (int i = 0; i < instance.subjects.size(); i++) {
-            subjects.add(instance.subjects.get(i));
-            subQuiz.put(instance.subjects.get(i), instance.subjects.get(i).subcategories);
-        }
-
-        /*Adding option for a +add Item to each SubQuiz Subject
-        subQuiz.put(subjects.get(0), mathList);
-        subQuiz.put(subjects.get(1), historyList);
-        subQuiz.put(subjects.get(2), scienceList);
-        subQuiz.put(subjects.get(3), otherList);
-
-        //build map using the Subjects and SubCategories from DB
-        //map info is stored into subjects List and subcategories list
-
-
-         Adding group dummy data
-        subjects.add("Math");
-        subjects.add("History");
-        subjects.add("Science");
-        subjects.add("Other");
-
-
-
-        // Math Children
-        List<String> mathList = new ArrayList<>();
-        mathList.add("Calculus");
-        mathList.add("+ Add Category");
-
-        //History Children
-        List<String> historyList = new ArrayList<>();
-        historyList.add("World Wars");
-        historyList.add("+ Add Category");
-
-        // list of Science
-        List<String> scienceList = new ArrayList<String>();
-        scienceList.add("Chemistry");
-        scienceList.add("+ Add Category");
-
-        // list of Other categories
-        List<String> otherList = new ArrayList<>();
-        otherList.add("+ Add Category");
-
-        // Adding child data
-        subQuiz.put(subjects.get(0), mathList);
-        subQuiz.put(subjects.get(1), historyList);
-        subQuiz.put(subjects.get(2), scienceList);
-        subQuiz.put(subjects.get(3), otherList);
-        */
-        // notify the adapter
-        listViewAdapter.notifyDataSetChanged();
-    }
-
+    
 }

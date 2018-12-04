@@ -10,10 +10,16 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+
+//-----------------------------------------------------------------------------
+//       Adapter code developed / derived from tutorial found at;
+//   http://www.androidtutorialshub.com/android-expandable-list-view-tutorial/
+//-----------------------------------------------------------------------------
 public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
     private Activity context;
@@ -26,7 +32,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     Map<QuizDatabase.Subject, List<QuizDatabase.Subcategory>> subQuiz;
 
 
-    public ExpandableListAdapter(Activity context, List<QuizDatabase.Subject> subjects, Map<QuizDatabase.Subject, List<QuizDatabase.Subcategory>> subQuiz) {
+    public ExpandableListAdapter(Activity context, List<QuizDatabase.Subject> subjects, Map<QuizDatabase.Subject, List<QuizDatabase.Subcategory>> subQuiz){
         this.context = context;
         this.subjects = subjects;
         this.subQuiz = subQuiz;
