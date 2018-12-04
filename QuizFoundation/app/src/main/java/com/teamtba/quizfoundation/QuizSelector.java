@@ -33,16 +33,14 @@ public class QuizSelector extends AppCompatActivity {
     //initialize our expandable List view and it's adapter
     ExpandableListView listView;
     com.teamtba.quizfoundation.ExpandableListAdapter listViewAdapter;
+    //initialize
     List<QuizDatabase.Subject> subjects;
     Map<QuizDatabase.Subject, List<QuizDatabase.Subcategory>> subQuiz;
-
-
-
-    //static QuizDatabase.Instance instance = QuizDatabase.getInstance();
-
+    //Grab the most up to date instance of our QuizDatabase
+    QuizDatabase.Instance instance = QuizDatabase.getInstance();
+    //selectedQuiz is to be passed to QuizAction activity
     String selectedQuiz;
-
-    //initialize
+    //initialize NewQuiz Button
     ImageButton addNewQuiz;
 
     @Override
@@ -56,7 +54,7 @@ public class QuizSelector extends AppCompatActivity {
         /**/
         listView = findViewById(R.id.quizSelectorList);
         addNewQuiz = findViewById(R.id.addNewQuizButton);
-        QuizDatabase.Instance instance = QuizDatabase.getInstance();
+        //QuizDatabase.Instance instance = QuizDatabase.getInstance();
 
         QuizDatabase.Subcategory calculus = new QuizDatabase.Subcategory();
         calculus.name = "Calculus";

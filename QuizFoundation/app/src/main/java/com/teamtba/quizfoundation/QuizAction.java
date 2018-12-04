@@ -50,16 +50,16 @@ public class QuizAction extends AppCompatActivity implements View.OnClickListene
 
         QuizDatabase.Question newQuestion = new QuizDatabase.Question();
         newQuestion.text = "This Quiz is awesome";
-        newQuestion.choices.add("True");
-        newQuestion.choices.add("False");
+        newQuestion.choices[0]="True";
+        newQuestion.choices[1]="False";
         newQuestion.answer = 0;
 
         quizCategory.questions.add(newQuestion);
 
         QuizDatabase.Question secondQuestion = new QuizDatabase.Question();
         secondQuestion.text = "This Quiz is awesome";
-        secondQuestion.choices.add("True");
-        secondQuestion.choices.add("False");
+        secondQuestion.choices[0]="True";
+        secondQuestion.choices[1]="False";
         secondQuestion.answer = 0;
         myQuiz.totalQuestions = quizCategory.questions.size();
 
@@ -82,22 +82,22 @@ public class QuizAction extends AppCompatActivity implements View.OnClickListene
             questionNumber.setText("Question " + totalQuestions);
             questionDisplay.setText(quizCategory.questions.get(i).text);
             //only buttons with possible answers will remain visible
-            if (quizCategory.questions.get(i).choices.size() == 3) {
+            if (quizCategory.questions.get(i).choices.length == 3) {
                 answerTwo.setVisibility(View.VISIBLE);
-                answerTwo.setText(quizCategory.questions.get(i).choices.get(2));
-            } else if (quizCategory.questions.get(i).choices.size() == 4) {
+                answerTwo.setText(quizCategory.questions.get(i).choices[2]);
+            } else if (quizCategory.questions.get(i).choices.length == 4) {
                 answerTwo.setVisibility(View.VISIBLE);
                 answerThree.setVisibility(View.VISIBLE);
-                answerTwo.setText(quizCategory.questions.get(i).choices.get(2));
-                answerThree.setText(quizCategory.questions.get(i).choices.get(3));
+                answerTwo.setText(quizCategory.questions.get(i).choices[2]);
+                answerThree.setText(quizCategory.questions.get(i).choices[3]);
 
             } else {
                 answerTwo.setVisibility(View.INVISIBLE);
                 answerThree.setVisibility(View.INVISIBLE);
             }
             //cycle through the possible answers and store them into button texts
-            answerZero.setText(quizCategory.questions.get(i).choices.get(0));
-            answerOne.setText(quizCategory.questions.get(i).choices.get(1));
+            answerZero.setText(quizCategory.questions.get(i).choices[0]);
+            answerOne.setText(quizCategory.questions.get(i).choices[1]);
 
             answerZero.setOnClickListener(this);
             answerOne.setOnClickListener(this);

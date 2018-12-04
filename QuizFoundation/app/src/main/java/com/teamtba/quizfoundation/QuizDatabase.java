@@ -32,7 +32,7 @@ public class QuizDatabase
     public static class Question implements Serializable
     {
         public String text = "N/A";
-        public List<String> choices = new ArrayList<String>();
+        public String[] choices = {"N/A"};
         public int answer = 0;
     }
 
