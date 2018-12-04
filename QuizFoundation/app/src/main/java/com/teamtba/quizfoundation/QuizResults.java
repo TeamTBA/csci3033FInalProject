@@ -51,8 +51,8 @@ public class QuizResults extends AppCompatActivity implements View.OnClickListen
             failNotice.setVisibility(View.INVISIBLE);
         }
 
-        gradePercentage.setText(String.valueOf(takenQuiz.getQuizScore() * 100.00));
-        incorrectAnswersNotice.setText("You answered " + String.valueOf(takenQuiz.incorrectAnswers.size()) + " Questions Incorrectly");
+        gradePercentage.setText(String.valueOf(takenQuiz.getQuizScore() * 100.00) + "%");
+        incorrectAnswersNotice.setText("You answered " + String.valueOf(takenQuiz.incorrectAnswers.size()) + "/" + String.valueOf(takenQuiz.totalQuestions) + " Questions Incorrectly");
 
         //listen to see if user chooses to go back to Select a New Quiz
         takeNewQuiz.setOnClickListener(this);
@@ -62,6 +62,7 @@ public class QuizResults extends AppCompatActivity implements View.OnClickListen
     @Override
     public void onClick(View v) {
         Intent goHome = new Intent(QuizResults.this,QuizSelector.class);
+        goHome.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(goHome);
     }
 }

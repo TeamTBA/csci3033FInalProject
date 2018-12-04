@@ -37,7 +37,7 @@ public class QuizSelector extends AppCompatActivity {
     List<QuizDatabase.Subject> subjects;
     Map<QuizDatabase.Subject, List<QuizDatabase.Subcategory>> subQuiz;
     //Grab the most up to date instance of our QuizDatabase
-    QuizDatabase.Instance instance = QuizDatabase.getInstance();
+    //QuizDatabase.Instance instance = QuizDatabase.getInstance();
     //selectedQuiz is to be passed to QuizAction activity
     String selectedQuiz;
     //initialize NewQuiz Button

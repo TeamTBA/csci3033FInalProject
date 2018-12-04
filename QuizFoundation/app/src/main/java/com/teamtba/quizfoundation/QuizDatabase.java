@@ -15,6 +15,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Vector;
 
 // this static class holds all the methods for accessing the quiz database.
 // this is stored in a binary file, the format of which is implementation-defined and potentially device-specific.
@@ -32,7 +33,7 @@ public class QuizDatabase
     public static class Question implements Serializable
     {
         public String text = "N/A";
-        public String[] choices = {"N/A"};
+        public String[] choices;
         public int answer = 0;
     }
 
