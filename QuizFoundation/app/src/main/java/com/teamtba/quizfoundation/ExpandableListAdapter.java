@@ -25,23 +25,16 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     private Activity context;
 
     // List / Parent items
-    List<QuizDatabase.Subject> subjects;
+    QuizDatabase.Instance instance;
 
-    //the children in expandable list are stored as a map
-    //each list of children is mapped to 1 subject
-    Map<QuizDatabase.Subject, List<QuizDatabase.Subcategory>> subQuiz;
-
-
-    public ExpandableListAdapter(Activity context, List<QuizDatabase.Subject> subjects, Map<QuizDatabase.Subject, List<QuizDatabase.Subcategory>> subQuiz){
+    public ExpandableListAdapter(Activity context){
         this.context = context;
-        this.subjects = subjects;
-        this.subQuiz = subQuiz;
+        this.instance = QuizDatabase.getInstance();
     }
 
     @Override
     public Object getChild(int groupPosition, int childPosition) {
-        return this.subQuiz.get(this.subjects.get(groupPosition))
-                .get(childPosition);
+        return instance.subjects.get(groupPosition).subcategories.get(childPosition);
     }
 
     @Override
@@ -72,18 +65,17 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public int getChildrenCount(int groupPosition) {
-        return this.subQuiz.get(this.subjects.get(groupPosition))
-                .size();
+        return instance.subjects.get(groupPosition).subcategories.size();
     }
 
     @Override
     public Object getGroup(int groupPosition) {
-        return this.subjects.get(groupPosition);
+        return instance.subjects.get(groupPosition);
     }
 
     @Override
     public int getGroupCount() {
-        return this.subjects.size();
+        return instance.subjects.size();
     }
 
     @Override

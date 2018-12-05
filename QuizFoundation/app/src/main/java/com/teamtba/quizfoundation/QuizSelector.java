@@ -63,7 +63,7 @@ public class QuizSelector extends AppCompatActivity {
         //subQuiz.put(math, math.subcategories);
         //subQuiz.put(science, science.subcategories);
 
-        listViewAdapter = new com.teamtba.quizfoundation.ExpandableListAdapter(this, instance.subjects, subQuiz);
+        listViewAdapter = new com.teamtba.quizfoundation.ExpandableListAdapter(this);
 
         // setting list adapter
         listView.setAdapter(listViewAdapter);
