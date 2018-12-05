@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +36,7 @@ public class QuizAction extends AppCompatActivity implements View.OnClickListene
     static int answerSubmit = 10;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,39 +47,11 @@ public class QuizAction extends AppCompatActivity implements View.OnClickListene
         questionID = 0;
 
         quizCategory = new QuizDatabase.Subcategory();
-        //quizCategory.questions = new ArrayList<QuizDatabase.Question>();
         selectedQuiz = getIntent().getStringExtra("selectedQuiz");
-        //quizCategory = QuizDatabase.getSubcategory(selectedQuiz);
+        quizCategory = QuizDatabase.getSubcategory(selectedQuiz);
         myQuiz = new QuizTaker();
 
-        List<String> dummychoices1 = new ArrayList<>();
-        dummychoices1.add("True");
-        dummychoices1.add("False");
-
-        QuizDatabase.Question newQuestion = new QuizDatabase.Question();
-        newQuestion.text = "This Quiz is awesome";
-        //newQuestion.choices.add("True");
-        newQuestion.choices = (dummychoices1.toArray(new String[0]));
-        newQuestion.answer = 0;
-
-        quizCategory.questions.add(newQuestion);
-
-        List<String> dummychoices2 = new ArrayList<>();
-        dummychoices2.add("Not too Long at all");
-        dummychoices2.add("Way too Long");
-        dummychoices2.add("Almost too long");
-
-        QuizDatabase.Question secondQuestion = new QuizDatabase.Question();
-        secondQuestion.text = "Is this quiz too long?";
-        secondQuestion.choices = (dummychoices2.toArray(new String[0]));
-        secondQuestion.answer = 0;
         myQuiz.totalQuestions = quizCategory.questions.size();
-
-        quizCategory.questions.add(secondQuestion);
-        myQuiz.totalQuestions = quizCategory.questions.size();
-
-
-
 
         //set buttons and textviews to their views
         answerZero = findViewById(R.id.answer0);
@@ -97,10 +71,6 @@ public class QuizAction extends AppCompatActivity implements View.OnClickListene
         answerThree.setOnClickListener(this);
 
     }
-
-
-
-
 
     public void onClick(View view) {
         switch(view.getId()) {

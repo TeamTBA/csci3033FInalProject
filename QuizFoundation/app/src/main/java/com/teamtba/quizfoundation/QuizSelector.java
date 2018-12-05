@@ -58,15 +58,16 @@ public class QuizSelector extends AppCompatActivity {
         //creating map
         subQuiz = new HashMap<>();
 
-
-
-        //subQuiz.put(math, math.subcategories);
-        //subQuiz.put(science, science.subcategories);
+        for (QuizDatabase.Subject i : instance.subjects)
+        {
+            subQuiz.put(i, i.subcategories);
+        }
 
         listViewAdapter = new com.teamtba.quizfoundation.ExpandableListAdapter(this);
 
         // setting list adapter
         listView.setAdapter(listViewAdapter);
+
 
         //set listeners for our Expandable List Object
         startExListeners();
@@ -82,6 +83,62 @@ public class QuizSelector extends AppCompatActivity {
             startActivity(intent);
         });
     }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        listViewAdapter.notifyDataSetChanged();
+
+        //set listeners for our Expandable List Object
+        startExListeners();
+
+        //if addNewQuiz button is clicked, move to the QuestionEditorActivity Page
+        findViewById(R.id.addNewQuizButton).setOnClickListener(e ->
+        {
+            Intent intent = new Intent(QuizSelector.this, QuestionEditorActivity.class);
+
+            QuestionEditorActivity.IntentArgs args = QuestionEditorActivity.IntentArgs.NewQuestion();
+            intent.putExtra(QuestionEditorActivity.INTENT_ARGS_NAME, args);
+
+            startActivity(intent);
+        });
+
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        listViewAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onRestart()
+    {
+        super.onRestart();
+        listViewAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onStart(){
+        super.onStart();
+        listViewAdapter.notifyDataSetChanged();
+
+        //set listeners for our Expandable List Object
+        startExListeners();
+
+        //if addNewQuiz button is clicked, move to the QuestionEditorActivity Page
+        findViewById(R.id.addNewQuizButton).setOnClickListener(e ->
+        {
+            Intent intent = new Intent(QuizSelector.this, QuestionEditorActivity.class);
+
+            QuestionEditorActivity.IntentArgs args = QuestionEditorActivity.IntentArgs.NewQuestion();
+            intent.putExtra(QuestionEditorActivity.INTENT_ARGS_NAME, args);
+
+            startActivity(intent);
+        });
+    }
+
+
 
     private void startExListeners() {
 
