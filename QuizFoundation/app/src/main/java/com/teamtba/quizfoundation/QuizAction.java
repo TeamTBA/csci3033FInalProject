@@ -11,7 +11,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-public class QuizAction extends AppCompatActivity implements View.OnClickListener {
+public class QuizAction extends AppCompatActivity {
 
     //QuizTaker class used to track # of questions taken
     //number incorrect, and store the incorrect Answers
@@ -31,9 +31,6 @@ public class QuizAction extends AppCompatActivity implements View.OnClickListene
 
     //use int to track selected answer
     static int questionID;
-    static int answerSubmit = 10;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,29 +65,16 @@ public class QuizAction extends AppCompatActivity implements View.OnClickListene
         //we will update the textviews on each question
         updateQuestion(questionID);
 
-        for (Button i : answerButtons) i.setOnClickListener(this);
+        for (int i = 0; i < answerButtons.length; ++i)
+        {
+            int __i = i; // used for by-value lambda capture
+            answerButtons[i].setOnClickListener(e -> submitAnswer(__i));
+        }
     }
 
-    public void onClick(View view) {
-        switch(view.getId()) {
-            case R.id.answer0: {
-                answerSubmit = 0;
-                break;
-            }
-            case R.id.answer1: {
-                answerSubmit = 1;
-                break;
-            }
-            case R.id.answer2: {
-                answerSubmit = 2;
-                break;
-            }
-            case R.id.answer3: {
-                answerSubmit = 3;
-                break;
-            }
-        }
-        if (answerSubmit != quizCategory.questions.get(questionID).answer) {
+    private void submitAnswer(int answer)
+    {
+        if (answer != quizCategory.questions.get(questionID).answer) {
             myQuiz.incorrectAnswers.add(quizCategory.questions.get(questionID));
         }
         questionID+=1;
