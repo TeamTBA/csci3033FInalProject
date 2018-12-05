@@ -118,6 +118,13 @@ public class QuizDatabase
         }
     }
 
+    // erases everything in the database and saves the empty state over the database file
+    public static void ERASE_EVERYTHING(Context context) throws IOError, IOException, ClassNotFoundException
+    {
+        Instance.instance.subjects = new ArrayList<>();
+        store(context);
+    }
+
     // ---------------------------------
 
     // if (name) is the name of a subject, returns the subject. otherwise returns null.

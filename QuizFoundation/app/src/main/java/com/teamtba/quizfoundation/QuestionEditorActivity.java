@@ -284,7 +284,7 @@ public class QuestionEditorActivity extends AppCompatActivity {
                 return;
             }
             // can't already exist
-            if (subject < instance.subjects.size() && instance.subjects.get(subject).findSubcategory(subcategory_text) != null){
+            if (subject >= 0 && subject < instance.subjects.size() && instance.subjects.get(subject).findSubcategory(subcategory_text) != null){
                 Toast.makeText(this, "New subcategory name already exists", Toast.LENGTH_LONG).show();
                 return;
             }
@@ -349,6 +349,7 @@ public class QuestionEditorActivity extends AppCompatActivity {
                     subject = instance.subjects.size();
                     instance.subjects.add(s);
                 }
+
                 // create the subcategory if it doesn't exist
                 if (subcategory < 0)
                 {

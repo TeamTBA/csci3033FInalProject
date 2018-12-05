@@ -51,7 +51,7 @@ public class QuizSelector extends AppCompatActivity {
         //QuizDatabase.load(this);
 
         // -- example pre-populated data -- //
-        /**/
+        /**
         listView = findViewById(R.id.quizSelectorList);
         addNewQuiz = findViewById(R.id.addNewQuizButton);
         //QuizDatabase.Instance instance = QuizDatabase.getInstance();
@@ -82,18 +82,18 @@ public class QuizSelector extends AppCompatActivity {
         subjects = new ArrayList<>();
         subjects.add(math);
         subjects.add(science);
+        /**/
 
         //creating map
-        subQuiz = new HashMap<>();
+        //subQuiz = new HashMap<>();
 
-        subQuiz.put(math, math.subcategories);
-        subQuiz.put(science, science.subcategories);
+        //subQuiz.put(math, math.subcategories);
+        //subQuiz.put(science, science.subcategories);
 
-        listViewAdapter = new com.teamtba.quizfoundation.ExpandableListAdapter(this, subjects, subQuiz);
+        //listViewAdapter = new com.teamtba.quizfoundation.ExpandableListAdapter(this, subjects, subQuiz);
 
         // setting list adapter
         listView.setAdapter(listViewAdapter);
-
 
         //set listeners for our Expandable List Object
         startExListeners();
