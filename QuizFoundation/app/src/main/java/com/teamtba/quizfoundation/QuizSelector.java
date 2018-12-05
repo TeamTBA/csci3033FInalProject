@@ -35,12 +35,6 @@ public class QuizSelector extends AppCompatActivity {
     com.teamtba.quizfoundation.ExpandableListAdapter listViewAdapter;
     //initialize
 
-    Map<QuizDatabase.Subject, List<QuizDatabase.Subcategory>> subQuiz;
-    //Grab the most up to date instance of our QuizDatabase
-    //QuizDatabase.Instance instance = QuizDatabase.getInstance();
-    //selectedQuiz is to be passed to QuizAction activity
-    String selectedQuiz;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,14 +48,6 @@ public class QuizSelector extends AppCompatActivity {
         // -- link subject adapter -- //
 
         QuizDatabase.Instance instance = QuizDatabase.getInstance();
-
-        //creating map
-        subQuiz = new HashMap<>();
-
-        for (QuizDatabase.Subject i : instance.subjects)
-        {
-            subQuiz.put(i, i.subcategories);
-        }
 
         listViewAdapter = new com.teamtba.quizfoundation.ExpandableListAdapter(this);
 
@@ -150,12 +136,14 @@ public class QuizSelector extends AppCompatActivity {
                                         int groupPosition, int childPosition, long id) {
                 //grab the selected quiz Category, store that information into
                 //selectedQuiz variable
-                selectedQuiz = subQuiz.get(QuizDatabase.getInstance().subjects.get(groupPosition)).get(childPosition).name;
+                QuizDatabase.Subcategory selectedQuiz = (QuizDatabase.Subcategory)listViewAdapter.getChild(groupPosition, childPosition);
+
                 //once item is selected, move to QuizAction
                 Intent intent = new Intent(QuizSelector.this, QuizAction.class);
                 //attach our selectedQuiz to our intent
-                intent.putExtra("selectedQuiz",selectedQuiz);
+                intent.putExtra("selectedQuiz", selectedQuiz.name);
                 startActivity(intent);
+
                 return false;
             }
         });
