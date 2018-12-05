@@ -300,7 +300,7 @@ public class QuestionEditorActivity extends AppCompatActivity {
             return;
         }
 
-        // -- calidate choices / aswer -- //
+        // -- validate choices / answer -- //
 
         List<String> _choices = new ArrayList<String>(choices.length);
         int answer = -1;

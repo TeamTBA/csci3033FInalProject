@@ -34,63 +34,36 @@ public class QuizSelector extends AppCompatActivity {
     ExpandableListView listView;
     com.teamtba.quizfoundation.ExpandableListAdapter listViewAdapter;
     //initialize
-    List<QuizDatabase.Subject> subjects;
+
     Map<QuizDatabase.Subject, List<QuizDatabase.Subcategory>> subQuiz;
     //Grab the most up to date instance of our QuizDatabase
     //QuizDatabase.Instance instance = QuizDatabase.getInstance();
     //selectedQuiz is to be passed to QuizAction activity
     String selectedQuiz;
-    //initialize NewQuiz Button
-    ImageButton addNewQuiz;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz_selector);
 
-        //QuizDatabase.load(this);
+        try { QuizDatabase.load(this); }
+        catch(Exception ex) { Toast.makeText(this, "ERORR LOADING DATABASE", Toast.LENGTH_LONG).show(); }
 
-        // -- example pre-populated data -- //
-        /**
         listView = findViewById(R.id.quizSelectorList);
-        addNewQuiz = findViewById(R.id.addNewQuizButton);
-        //QuizDatabase.Instance instance = QuizDatabase.getInstance();
 
-        QuizDatabase.Subcategory calculus = new QuizDatabase.Subcategory();
-        calculus.name = "Calculus";
-        QuizDatabase.Subcategory algebra = new QuizDatabase.Subcategory();
-        algebra.name = "Algebra";
-        QuizDatabase.Subcategory geometry = new QuizDatabase.Subcategory();
-        geometry.name = "Geometry";
+        // -- link subject adapter -- //
 
-        QuizDatabase.Subcategory physics = new QuizDatabase.Subcategory();
-        physics.name = "Physics";
-        QuizDatabase.Subcategory chemistry = new QuizDatabase.Subcategory();
-        chemistry.name = "Chemistry";
-
-        QuizDatabase.Subject math = new QuizDatabase.Subject();
-        math.name = "Math";
-        math.subcategories.add(calculus);
-        math.subcategories.add(algebra);
-        math.subcategories.add(geometry);
-
-        QuizDatabase.Subject science = new QuizDatabase.Subject();
-        science.name = "Science";
-        science.subcategories.add(physics);
-        science.subcategories.add(chemistry);
-
-        subjects = new ArrayList<>();
-        subjects.add(math);
-        subjects.add(science);
-        /**/
+        QuizDatabase.Instance instance = QuizDatabase.getInstance();
 
         //creating map
-        //subQuiz = new HashMap<>();
+        subQuiz = new HashMap<>();
+
+
 
         //subQuiz.put(math, math.subcategories);
         //subQuiz.put(science, science.subcategories);
 
-        //listViewAdapter = new com.teamtba.quizfoundation.ExpandableListAdapter(this, subjects, subQuiz);
+        listViewAdapter = new com.teamtba.quizfoundation.ExpandableListAdapter(this, instance.subjects, subQuiz);
 
         // setting list adapter
         listView.setAdapter(listViewAdapter);
@@ -99,7 +72,7 @@ public class QuizSelector extends AppCompatActivity {
         startExListeners();
 
         //if addNewQuiz button is clicked, move to the QuestionEditorActivity Page
-        addNewQuiz.setOnClickListener(e ->
+        findViewById(R.id.addNewQuizButton).setOnClickListener(e ->
         {
             Intent intent = new Intent(QuizSelector.this, QuestionEditorActivity.class);
 
@@ -120,7 +93,7 @@ public class QuizSelector extends AppCompatActivity {
                                         int groupPosition, int childPosition, long id) {
                 //grab the selected quiz Category, store that information into
                 //selectedQuiz variable
-                selectedQuiz = subQuiz.get(subjects.get(groupPosition)).get(childPosition).name;
+                selectedQuiz = subQuiz.get(QuizDatabase.getInstance().subjects.get(groupPosition)).get(childPosition).name;
                 //once item is selected, move to QuizAction
                 Intent intent = new Intent(QuizSelector.this, QuizAction.class);
                 //attach our selectedQuiz to our intent
