@@ -18,12 +18,10 @@ public class QuizAction extends AppCompatActivity implements View.OnClickListene
     static QuizTaker myQuiz;
 
     //Declare Buttons and TextViews
-    static Button answerZero;
-    static Button answerOne;
-    static Button answerTwo;
-    static Button answerThree;
-    static TextView questionNumber;
-    static TextView questionDisplay;
+    Button[] answerButtons;
+
+    TextView questionNumber;
+    TextView questionDisplay;
 
     //string pulled from Extra
     String selectedQuiz;
@@ -54,10 +52,14 @@ public class QuizAction extends AppCompatActivity implements View.OnClickListene
         myQuiz.totalQuestions = quizCategory.questions.size();
 
         //set buttons and textviews to their views
-        answerZero = findViewById(R.id.answer0);
-        answerOne = findViewById(R.id.answer1);
-        answerTwo = findViewById(R.id.answer2);
-        answerThree = findViewById(R.id.answer3);
+        answerButtons = new Button[]
+        {
+                findViewById(R.id.answer0),
+                findViewById(R.id.answer1),
+                findViewById(R.id.answer2),
+                findViewById(R.id.answer3),
+        };
+
         questionNumber = findViewById(R.id.questionNumber);
         questionDisplay = findViewById(R.id.questionDisplay);
 
@@ -65,11 +67,8 @@ public class QuizAction extends AppCompatActivity implements View.OnClickListene
         //For each question included in our SubCategory List 'Questions'
         //we will update the textviews on each question
         updateQuestion(questionID);
-        answerZero.setOnClickListener(this);
-        answerOne.setOnClickListener(this);
-        answerTwo.setOnClickListener(this);
-        answerThree.setOnClickListener(this);
 
+        for (Button i : answerButtons) i.setOnClickListener(this);
     }
 
     public void onClick(View view) {
@@ -110,23 +109,19 @@ public class QuizAction extends AppCompatActivity implements View.OnClickListene
     {
         questionNumber.setText("Question " + (questionID + 1));
         questionDisplay.setText(quizCategory.questions.get(questionID).text);
-        //only buttons with possible answers will remain visible
-        if (quizCategory.questions.get(questionID).choices.length == 3) {
-            answerTwo.setVisibility(View.VISIBLE);
-            answerTwo.setText(quizCategory.questions.get(questionID).choices[2]);
-        } else if (quizCategory.questions.get(questionID).choices.length == 4) {
-            answerTwo.setVisibility(View.VISIBLE);
-            answerThree.setVisibility(View.VISIBLE);
-            answerTwo.setText(quizCategory.questions.get(questionID).choices[2]);
-            answerThree.setText(quizCategory.questions.get(questionID).choices[3]);
 
-        } else {
-            answerTwo.setVisibility(View.INVISIBLE);
-            answerThree.setVisibility(View.INVISIBLE);
+        QuizDatabase.Question question = quizCategory.questions.get(questionID);
+
+        // only buttons with possible answers will remain visible
+        for (int i = 0; i < answerButtons.length; ++i)
+        {
+            if (i < question.choices.length)
+            {
+                answerButtons[i].setVisibility(View.VISIBLE);
+                answerButtons[i].setText(question.choices[i]);
+            }
+            else answerButtons[i].setVisibility(View.INVISIBLE);
         }
-        //cycle through the possible answers and store them into button texts
-        answerZero.setText(quizCategory.questions.get(questionID).choices[0]);
-        answerOne.setText(quizCategory.questions.get(questionID).choices[1]);
     }
 
 }
